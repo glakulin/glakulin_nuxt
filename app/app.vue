@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { tokens } from "@/gla_ui/tokens";
+import Flex from './gla_ui/components/atom/Flex.vue';
+
 </script>
 
 <template>
   <div>
     <NuxtRouteAnnouncer />
+    <Flex
+      tag="main"
+      direction="column"
+      :gap="[64]"
+    >
+      <NuxtPage />
+    </Flex>
   </div>
 </template>
-
-<style lang="scss">
-body {
-  background-color: v-bind('tokens.colors.gray[9]');
-}
-</style>
