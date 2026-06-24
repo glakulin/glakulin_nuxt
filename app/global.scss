@@ -1,3 +1,52 @@
+// google fonts
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+.material-symbols-rounded {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
 body {
   background-color: var(--colors-gray-9);
+  color: var(--colors-gray-1);
+}
+
+
+// fonts
+@font-face {
+  font-family: var(--typography-nerd);
+  src: url("/IBMPlexMono Nerd/BlexMonoNerdFont-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: var(--typography-nerd);
+  src: url("/IBMPlexMono Nerd/BlexMonoNerdFont-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: var(--typography-nerd);
+  src: url("/IBMPlexMono Nerd/BlexMonoNerdFont-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: var(--typography-nerd);
+  src: url("/IBMPlexMono Nerd/BlexMonoNerdFont-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+.heading {
+  font-family: var(--typography-heading-family);
+}
+.body {
+  font-family: var(--typography-body-family);
+}
+.mono, .nerd {
+  font-family: var(--typography-nerd);
 }
