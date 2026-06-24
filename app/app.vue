@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Flex from './gla_ui/components/atom/Flex.vue';
+import Flex from '~/gla_ui/components/atom/Flex.vue';
 
 </script>
 
