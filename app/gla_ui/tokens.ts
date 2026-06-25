@@ -7,7 +7,11 @@ export const tokens = reactive(tokens_data);
 
 // Кастомный тип для числовых значений
 export type Num_Values = [number] | [number, number] | [number, number, number] | [number, number, number, number];
-// Функция для его обработки
+
+// Тип для названий размеров
+export type Size = "default" | "xs" | "sm" | "md" | "lg" | "xl";
+
+// Функция для обработки `Num_Values`
 export function get_nums(nums: Num_Values): string {
   if (!Array.isArray(nums)) {
     return '0rem';

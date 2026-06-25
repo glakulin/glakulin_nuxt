@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<{
   padding: () => [0] as Num_Values
 });
 
-// Функции нужно считать до использования в style
+// Обработка свойств
 const gap = computed(() => get_nums(props.gap));
 const padding = computed(() => get_nums(props.padding));
 </script>
