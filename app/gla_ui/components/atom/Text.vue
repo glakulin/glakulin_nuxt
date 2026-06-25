@@ -15,24 +15,22 @@ const props = withDefaults(defineProps<{
   size: "default"
 });
 
-// Обработка свойств
-const size = computed(() => `${tokens.typography[props.family].size[props.size] * tokens.rem}rem`);
-const weight = computed(() => tokens.typography[props.family].weight[props.size]);
+// Свойства в стили
+const text_styles = computed(() => {
+  return {
+    fontSize: `${tokens.typography[props.family].size[props.size] * tokens.rem}rem`,
+    fontWeight: tokens.typography[props.family].weight[props.size],
+    lineHeight: `${tokens.typography[props.family].size[props.size] * tokens.rem}rem`
+  };
+});
 </script>
 
 <template>
   <component
     :is="props.tag"
-    :class="`${props.family} text`"
+    :class="props.family"
+    :style="text_styles"
   >
     <slot />
   </component>
 </template>
-
-<style lang="scss" scoped>
-.text {
-  font-size: v-bind('size');
-  font-weight: v-bind('weight');
-  line-height: v-bind('size');
-}
-</style>

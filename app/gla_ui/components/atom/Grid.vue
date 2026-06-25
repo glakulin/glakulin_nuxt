@@ -44,39 +44,34 @@ const props = withDefaults(defineProps<{
   radius: () => [0] as Num_Values
 });
 
-// Обработка свойств
-const gap = computed(() => get_nums(props.gap));
-const padding = computed(() => get_nums(props.padding));
-const radius = computed(() => get_nums(props.radius));
+// Свойства в стили
+const grid_styles = computed(() => {
+  return {
+    display: props.inline ? "inline-grid" : "grid",
+    gridTemplateColumns: props.columns,
+    gridTemplateRows: props.rows,
+    gridTemplateAreas: props.areas,
+    gridAutoFlow: props.auto_flow,
+    gridAutoColumns: props.auto_columns,
+    gridAutoRows: props.auto_rows,
+
+    alignItems: props.align_items,
+    justifyItems: props.justify_items,
+    alignContent: props.align_content,
+    justifyContent: props.justify_content,
+
+    gap: get_nums(props.gap),
+    padding: get_nums(props.padding),
+    borderRadius: get_nums(props.radius)
+  };
+});
 </script>
 
 <template>
   <component
     :is="props.tag"
-    class="grid"
+    :style="grid_styles"
   >
     <slot />
   </component>
 </template>
-
-<style lang="scss" scoped>
-// Стили по свойствам
-.grid {
-  display: v-bind('props.inline ? "inline-grid" : "grid"');
-  grid-template-columns: v-bind('props.columns');
-  grid-template-rows: v-bind('props.rows');
-  grid-template-areas: v-bind('props.areas');
-  grid-auto-flow: v-bind('props.auto_flow');
-  grid-auto-columns: v-bind('props.auto_columns');
-  grid-auto-rows: v-bind('props.auto_rows');
-
-  align-items: v-bind('props.align_items');
-  justify-items: v-bind('props.justify_items');
-  align-content: v-bind('props.align_content');
-  justify-content: v-bind('props.justify_content');
-
-  gap: v-bind('gap');
-  padding: v-bind('padding');
-  border-radius: v-bind('radius');
-}
-</style>
