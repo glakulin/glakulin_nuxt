@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<{
 
   gap?: Num_Values; // Промежуток
   padding?: Num_Values; // Отступы
+  radius?: Num_Values; // Скругление
 }>(), {
   // Значения по умолчанию
   tag: "div",
@@ -31,12 +32,14 @@ const props = withDefaults(defineProps<{
   align_content: "flex-start",
   justify_content: "flex-start",
   gap: () => [0] as Num_Values,
-  padding: () => [0] as Num_Values
+  padding: () => [0] as Num_Values,
+  radius: () => [0] as Num_Values
 });
 
 // Обработка свойств
 const gap = computed(() => get_nums(props.gap));
 const padding = computed(() => get_nums(props.padding));
+const radius = computed(() => get_nums(props.radius));
 </script>
 
 <template>
@@ -62,5 +65,6 @@ const padding = computed(() => get_nums(props.padding));
 
   gap: v-bind('gap');
   padding: v-bind('padding');
+  border-radius: v-bind('radius');
 }
 </style>

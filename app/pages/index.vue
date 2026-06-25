@@ -1,187 +1,52 @@
 <script setup lang="ts">
 import Text from "~/gla_ui/components/atom/Text.vue";
 import Flex from "~/gla_ui/components/atom/Flex.vue";
+import Grid from "~/gla_ui/components/atom/Grid.vue";
+import Masonry from "~/gla_ui/components/atom/Masonry.vue";
+import { tokens, type Size } from "~/gla_ui/tokens";
+
+// Для демо шрифтов
+const sizes = Object.keys(tokens.typography.body.size);
+const font_groups: {
+  family: "body" | "heading",
+  label: string,
+  mono: boolean,
+}[] = [
+    { family: 'heading', label: 'Heading', mono: false },
+    { family: 'body', label: 'Body', mono: false },
+    { family: 'body', label: 'Mono', mono: true },
+    { family: 'heading', label: 'MonoBIG', mono: true },
+  ];
+
+// Для демо цветов
+const color_groups = Object.entries(tokens.colors).map(([name, colors]) => ({
+  name,
+  colors: colors as Record<string, string>
+}));
 </script>
 
 <template>
-<Flex
-  :gap="[12]"
->
-  <Flex
-    direction="column"
-    :gap="[4]"
-  >
-    <Text
-      family="heading"
-      size="default"
-    >
-      Heading_default
-    </Text>
-    <Text
-      family="heading"
-      size="xs"
-    >
-      Heading_xs
-    </Text>
-    <Text
-      family="heading"
-      size="sm"
-    >
-      Heading_sm
-    </Text>
-    <Text
-      family="heading"
-      size="md"
-    >
-      Heading_md
-    </Text>
-    <Text
-      family="heading"
-      size="lg"
-    >
-      Heading_lg
-    </Text>
-    <Text
-      family="heading"
-      size="xl"
-    >
-      Heading_xl
-    </Text>
+  <Flex :gap="[20]" wrap="wrap">
+    <!-- Демо шрифтов -->
+    <Flex :gap="[12]">
+      <Flex v-for="group in font_groups" :key="group.label" direction="column" :gap="[4]">
+        <Text v-for="size in sizes" :key="size" :family="group.family" :size="size as Size"
+          :class="{ mono: group.mono }">
+          {{ group.label }}_{{ size }}
+        </Text>
+      </Flex>
+    </Flex>
+
+    <!-- Демо цветов -->
+    <Masonry direction="horizontal" :rows="3" :gap="[12]">
+      <Grid columns="auto auto auto" :gap="[4]" v-for="group in color_groups" :key="group.name">
+        <Flex v-for="(color, shade) in group.colors" :key="`${color}_${shade}`" :style="{ backgroundColor: color }"
+          :padding="[4]" :radius="[2]">
+          <Text size="xs" :style="{ color: `var(--colors-gray-${(+shade < 5) ? '9' : '1'})` }">
+            {{ group.name }}_{{ shade }}
+          </Text>
+        </Flex>
+      </Grid>
+    </Masonry>
   </Flex>
-  <Flex
-    direction="column"
-    :gap="[4]"
-  >
-    <Text
-      family="body"
-      size="default"
-    >
-      Body_default
-    </Text>
-    <Text
-      family="body"
-      size="xs"
-    >
-      Body_xs
-    </Text>
-    <Text
-      family="body"
-      size="sm"
-    >
-      Body_sm
-    </Text>
-    <Text
-      family="body"
-      size="md"
-    >
-      Body_md
-    </Text>
-    <Text
-      family="body"
-      size="lg"
-    >
-      Body_lg
-    </Text>
-    <Text
-      family="body"
-      size="xl"
-    >
-      Body_xl
-    </Text>
-  </Flex>
-  <Flex
-    direction="column"
-    :gap="[4]"
-  >
-    <Text
-      family="body"
-      size="default"
-      class="mono"
-    >
-      Mono_default
-    </Text>
-    <Text
-      family="body"
-      size="xs"
-      class="mono"
-    >
-      Mono_xs
-    </Text>
-    <Text
-      family="body"
-      size="sm"
-      class="mono"
-    >
-      Mono_sm
-    </Text>
-    <Text
-      family="body"
-      size="md"
-      class="mono"
-    >
-      Mono_md
-    </Text>
-    <Text
-      family="body"
-      size="lg"
-      class="mono"
-    >
-      Mono_lg
-    </Text>
-    <Text
-      family="body"
-      size="xl"
-      class="mono"
-    >
-      Mono_xl
-    </Text>
-  </Flex>
-  <Flex
-    direction="column"
-    :gap="[4]"
-  >
-    <Text
-      family="heading"
-      size="default"
-      class="mono"
-    >
-      MonoBIG_default
-    </Text>
-    <Text
-      family="heading"
-      size="xs"
-      class="mono"
-    >
-      MonoBIG_xs
-    </Text>
-    <Text
-      family="heading"
-      size="sm"
-      class="mono"
-    >
-      MonoBIG_sm
-    </Text>
-    <Text
-      family="heading"
-      size="md"
-      class="mono"
-    >
-      MonoBIG_md
-    </Text>
-    <Text
-      family="heading"
-      size="lg"
-      class="mono"
-    >
-      MonoBIG_lg
-    </Text>
-    <Text
-      family="heading"
-      size="xl"
-      class="mono"
-    >
-      MonoBIG_xl
-    </Text>
-  </Flex>
-</Flex>
 </template>
