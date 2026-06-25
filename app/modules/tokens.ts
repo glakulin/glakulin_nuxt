@@ -30,7 +30,7 @@ function generateCssVariables(obj: Record<string, any>, prefix = ''): string[] {
 
 export default defineNuxtModule({
   meta: {
-    name: 'design-tokens'
+    name: 'gla_ui  tokens'
   },
   setup(options, nuxt) {
     const tokensPath = resolve(nuxt.options.rootDir, 'app/gla_ui/tokens.json');
@@ -45,7 +45,7 @@ export default defineNuxtModule({
     try {
       tokens = JSON.parse(readFileSync(tokensPath, 'utf-8'));
     } catch (error) {
-      console.warn(`[design-tokens] Файл ${tokensPath} не найден или поврежден. CSS переменные не сгенерированы.`);
+      console.warn(`[gla_ui  tokens] Файл ${tokensPath} не найден или поврежден. CSS переменные не сгенерированы.`);
       return; // Прерываем выполнение модуля, Nuxt продолжит работу
     }
 
@@ -55,7 +55,7 @@ export default defineNuxtModule({
 
     // 6. Правильное использование addTemplate
     const template = addTemplate({
-      filename: 'design-tokens.css',
+      filename: 'gla_ui  tokens.css',
       getContents: () => cssContent
     });
 

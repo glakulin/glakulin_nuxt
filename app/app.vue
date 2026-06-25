@@ -7,6 +7,16 @@ const { width } = use_window_size();
 const screens = tokens.size.screen;
 const paddings = tokens.size.padding;
 
+const isMounted = ref(false);
+
+onMounted(() => {
+  // Даём Vue один тик, чтобы он закончил процесс гидратации,
+  // а затем переключаем ключ. Компонент перерисуется с нуля клиентом.
+  nextTick(() => {
+    isMounted.value = true;
+  });
+});
+
 const padding = computed(() => {
   const w = width.value;
   if (w >= screens.xl) return paddings.xl;
@@ -25,6 +35,7 @@ const padding = computed(() => {
   direction="column"
   :gap="[64]"
   :padding="[0, padding]"
+  :key="isMounted ? 'client' : 'server'"
 >
   <NuxtPage />
 </Flex>
