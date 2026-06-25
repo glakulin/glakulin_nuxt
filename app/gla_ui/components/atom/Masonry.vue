@@ -2,7 +2,6 @@
 
 <script setup lang="ts">
 import { get_nums, type Num_Values } from "~/gla_ui/tokens";
-import { ref, onMounted, onUnmounted, watch } from "vue";
 
 // Свойства
 const props = withDefaults(defineProps<{
