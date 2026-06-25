@@ -13,6 +13,11 @@ const props = withDefaults(defineProps<{
   flex?: Property.Flex; // Рост, уменьшение, база
   gap?: Num_Values; // Промежуток
   padding?: Num_Values; // Отсупы
+  // Свойства для выравнивания
+  alignItems?: Property.AlignItems;
+  justifyItems?: Property.JustifyItems;
+  alignContent?: Property.AlignContent;
+  justifyContent?: Property.JustifyContent;
 }>(), {
   // Значения по умолчанию
   tag: "div",
@@ -46,5 +51,9 @@ const padding = computed(() => get_nums(props.padding));
   flex: v-bind('props.flex');
   gap: v-bind('gap');
   padding: v-bind('padding');
+  align-items: v-bind('props.alignItems');
+  justify-items: v-bind('props.justifyItems');
+  align-content: v-bind('props.alignContent');
+  justify-content: v-bind('props.justifyContent');
 }
 </style>
