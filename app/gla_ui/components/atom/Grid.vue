@@ -1,4 +1,4 @@
-<!-- Компонент для flexbox -->
+<!-- Компонент для gridbox -->
 
 <script setup lang="ts">
 import type { Property } from "csstype"; // Библиотека для типов из css
@@ -8,9 +8,13 @@ import { get_nums, type Num_Values } from "~/gla_ui/tokens";
 const props = withDefaults(defineProps<{
   tag?: keyof HTMLElementTagNameMap; // HTML тег
 
-  inline?: boolean; // inline-flex или просто flex
-  direction?: Property.FlexDirection; // Направление
-  wrap?: Property.FlexWrap; // Перенос
+  inline?: boolean; // inline-grid или просто grid
+  columns?: Property.GridTemplateColumns; // Колонки
+  rows?: Property.GridTemplateRows; // Строки
+  areas?: Property.GridTemplateAreas; // Области
+  auto_flow?: Property.GridAutoFlow; // Авто поток
+  auto_columns?: Property.GridAutoColumns; // Авто колонки
+  auto_rows?: Property.GridAutoRows; // Авто строки
 
   // Свойства для выравнивания
   align_items?: Property.AlignItems;
@@ -24,8 +28,12 @@ const props = withDefaults(defineProps<{
   // Значения по умолчанию
   tag: "div",
   inline: false,
-  direction: "row",
-  wrap: "nowrap",
+  columns: undefined,
+  rows: undefined,
+  areas: undefined,
+  auto_flow: "row",
+  auto_columns: undefined,
+  auto_rows: undefined,
   align_items: "flex-start",
   justify_items: "flex-start",
   align_content: "flex-start",
@@ -42,7 +50,7 @@ const padding = computed(() => get_nums(props.padding));
 <template>
   <component
     :is="props.tag"
-    class="flex"
+    class="grid"
   >
     <slot />
   </component>
@@ -50,10 +58,14 @@ const padding = computed(() => get_nums(props.padding));
 
 <style lang="scss" scoped>
 // Стили по свойствам
-.flex {
-  display: v-bind('props.inline ? "inline-flex" : "flex"');
-  flex-direction: v-bind('props.direction');
-  flex-wrap: v-bind('props.wrap');
+.grid {
+  display: v-bind('props.inline ? "inline-grid" : "grid"');
+  grid-template-columns: v-bind('props.columns');
+  grid-template-rows: v-bind('props.rows');
+  grid-template-areas: v-bind('props.areas');
+  grid-auto-flow: v-bind('props.auto_flow');
+  grid-auto-columns: v-bind('props.auto_columns');
+  grid-auto-rows: v-bind('props.auto_rows');
 
   align-items: v-bind('props.align_items');
   justify-items: v-bind('props.justify_items');
