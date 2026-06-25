@@ -36,35 +36,28 @@ const props = withDefaults(defineProps<{
   radius: () => [0] as Num_Values
 });
 
-// Обработка свойств
-const gap = computed(() => get_nums(props.gap));
-const padding = computed(() => get_nums(props.padding));
-const radius = computed(() => get_nums(props.radius));
+// Свойства в стили
+const flex_styles = computed(() => {
+  return {
+    display: props.inline ? "inline-flex" : "flex",
+    flexDirection: props.direction,
+    flexWrap: props.wrap,
+    alignItems: props.align_items,
+    justifyItems: props.justify_items,
+    alignContent: props.align_content,
+    justifyContent: props.justify_content,
+    gap: get_nums(props.gap),
+    padding: get_nums(props.padding),
+    borderRadius: get_nums(props.radius)
+  };
+});
 </script>
 
 <template>
   <component
     :is="props.tag"
-    class="flex"
+    :style="flex_styles"
   >
     <slot />
   </component>
 </template>
-
-<style lang="scss" scoped>
-// Стили по свойствам
-.flex {
-  display: v-bind('props.inline ? "inline-flex" : "flex"');
-  flex-direction: v-bind('props.direction');
-  flex-wrap: v-bind('props.wrap');
-
-  align-items: v-bind('props.align_items');
-  justify-items: v-bind('props.justify_items');
-  align-content: v-bind('props.align_content');
-  justify-content: v-bind('props.justify_content');
-
-  gap: v-bind('gap');
-  padding: v-bind('padding');
-  border-radius: v-bind('radius');
-}
-</style>
