@@ -1,5 +1,93 @@
 <script setup lang="ts">
+import Text from "~/gla_ui/components/atom/Text.vue";
+import Flex from "~/gla_ui/components/atom/Flex.vue";
 </script>
 
 <template>
+<Flex
+  :gap="[12]"
+>
+  <Flex
+    direction="column"
+    :gap="[4]"
+  >
+    <Text
+      family="heading"
+      size="default"
+    >
+      Heading_default
+    </Text>
+    <Text
+      family="heading"
+      size="xs"
+    >
+      Heading_xs
+    </Text>
+    <Text
+      family="heading"
+      size="sm"
+    >
+      Heading_sm
+    </Text>
+    <Text
+      family="heading"
+      size="md"
+    >
+      Heading_md
+    </Text>
+    <Text
+      family="heading"
+      size="lg"
+    >
+      Heading_lg
+    </Text>
+    <Text
+      family="heading"
+      size="xl"
+    >
+      Heading_xl
+    </Text>
+  </Flex>
+  <Flex
+    direction="column"
+    :gap="[4]"
+  >
+    <Text
+      family="body"
+      size="default"
+    >
+      Body_default
+    </Text>
+    <Text
+      family="body"
+      size="xs"
+    >
+      Body_xs
+    </Text>
+    <Text
+      family="body"
+      size="sm"
+    >
+      Body_sm
+    </Text>
+    <Text
+      family="body"
+      size="md"
+    >
+      Body_md
+    </Text>
+    <Text
+      family="body"
+      size="lg"
+    >
+      Body_lg
+    </Text>
+    <Text
+      family="body"
+      size="xl"
+    >
+      Body_xl
+    </Text>
+  </Flex>
+</Flex>
 </template>
