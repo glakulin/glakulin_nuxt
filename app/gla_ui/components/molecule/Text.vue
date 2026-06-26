@@ -18,20 +18,17 @@ const props = withDefaults(defineProps<{
 });
 
 // Свойства в стили
-const text_styles = computed(() => {
-  return {
-    fontSize: `${tokens.typography[props.family].size[props.size] * tokens.rem}rem`,
-    fontWeight: tokens.typography[props.family].weight[props.size],
-    lineHeight: `${tokens.typography[props.family].size[props.size] * tokens.rem}rem`,
-  };
+const text_styles = use_css({
+  fontSize: `${tokens.typography[props.family].size[props.size] * tokens.rem}rem`,
+  fontWeight: tokens.typography[props.family].weight[props.size],
+  lineHeight: `${tokens.typography[props.family].size[props.size] * tokens.rem}rem`,
 });
 </script>
 
 <template>
   <Flex
     :tag="props.tag"
-    :class="props.family"
-    :style="text_styles"
+    :class="`${props.family} ${text_styles}`"
     align_items="center"
   >
     <slot />

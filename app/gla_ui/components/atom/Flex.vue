@@ -41,28 +41,26 @@ const props = withDefaults(defineProps<{
 });
 
 // Свойства в стили
-const flex_styles = computed(() => {
-  return {
-    display: props.inline ? "inline-flex" : "flex",
-    flexDirection: props.direction,
-    flexWrap: props.wrap,
-    alignItems: props.align_items,
-    justifyItems: props.justify_items,
-    alignContent: props.align_content,
-    justifyContent: props.justify_content,
-    gap: get_nums(props.gap),
-    padding: get_nums(props.padding),
-    borderRadius: get_nums(props.radius),
-    color: get_color(props.color),
-    backgroundColor: get_color(props.color_bg)
-  };
+const flex_styles = use_css({
+  display: props.inline ? "inline-flex" : "flex",
+  flexDirection: props.direction,
+  flexWrap: props.wrap,
+  alignItems: props.align_items,
+  justifyItems: props.justify_items,
+  alignContent: props.align_content,
+  justifyContent: props.justify_content,
+  gap: get_nums(props.gap),
+  padding: get_nums(props.padding),
+  borderRadius: get_nums(props.radius),
+  color: get_color(props.color),
+  backgroundColor: get_color(props.color_bg)
 });
 </script>
 
 <template>
   <component
     :is="props.tag"
-    :style="flex_styles"
+    :class="flex_styles"
   >
     <slot />
   </component>

@@ -28,11 +28,12 @@ const container = ref<HTMLElement | null>(null); // Ссылка на DOM кон
 const container_height = ref(0); // Вычисленная высота контейнера
 
 // Стили контейнера
-const container_styles = computed(() => ({
+const container_styles = use_css({
   height: container_height.value > 0 ? `${container_height.value}px` : undefined,
   padding: get_nums(props.padding),
-  borderRadius: get_nums(props.radius)
-}));
+  borderRadius: get_nums(props.radius),
+  position: "relative"
+});
 
 // Вычисляем значение gap в rem
 const gap_value = computed(() => {
@@ -64,9 +65,9 @@ function layout() {
   }
   
   const gap = gap_value.value;
-  const containerWidth = container.value.offsetWidth;
+  const container_width = container.value.offsetWidth;
   
-  if (containerWidth === 0) {
+  if (container_width === 0) {
     // Контейнер ещё не отрендерился, пробуем позже
     setTimeout(layout, 50);
     return;
@@ -75,14 +76,14 @@ function layout() {
   if (props.direction === "vertical") {
     // ВЕРТИКАЛЬНЫЙ РЕЖИМ: одинаковая ширина, разная высота
     const cols = props.columns;
-    const colWidth = (containerWidth - (cols - 1) * gap) / cols;
+    const col_width = (container_width - (cols - 1) * gap) / cols;
     
-    if (colWidth <= 0) return;
+    if (col_width <= 0) return;
     
     // ШАГ 1: Устанавливаем ширину всем элементам
     items.forEach((item) => {
       item.style.position = "absolute";
-      item.style.width = `${colWidth}px`;
+      item.style.width = `${col_width}px`;
       item.style.left = "0";
       item.style.top = "0";
     });
@@ -104,7 +105,7 @@ function layout() {
       
       // Находим самую короткую колонку
       const shortest_col = get_min_index(heights);
-      const x = shortest_col * (colWidth + gap);
+      const x = shortest_col * (col_width + gap);
       const y = heights[shortest_col];
       
       // Устанавливаем позицию
@@ -204,15 +205,8 @@ watch(
   <component
     :is="props.tag"
     ref="container"
-    class="masonry"
-    :style="container_styles"
+    class="container_styles"
   >
     <slot />
   </component>
 </template>
-
-<style lang="scss" scoped>
-.masonry {
-  position: relative;
-}
-</style>
