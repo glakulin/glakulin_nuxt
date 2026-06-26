@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<{
 });
 
 // Свойства в стили
-const grid_styles = use_css({
+const grid_styles = use_css(() => ({
   display: props.inline ? "inline-grid" : "grid",
   gridTemplateColumns: props.columns,
   gridTemplateRows: props.rows,
@@ -62,7 +62,7 @@ const grid_styles = use_css({
   gap: get_nums(props.gap),
   padding: get_nums(props.padding),
   borderRadius: get_nums(props.radius)
-});
+}));
 </script>
 
 <template>

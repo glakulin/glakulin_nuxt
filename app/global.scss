@@ -41,25 +41,25 @@ body {
 
 // fonts
 @font-face {
-  font-family: var(--typography-nerd);
+  font-family: "BlexMono Nerd Font";
   src: url("/IBMPlexMono Nerd/BlexMonoNerdFont-Regular.ttf") format("truetype");
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: var(--typography-nerd);
+  font-family: "BlexMono Nerd Font";
   src: url("/IBMPlexMono Nerd/BlexMonoNerdFont-Medium.ttf") format("truetype");
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
-  font-family: var(--typography-nerd);
+  font-family: "BlexMono Nerd Font";
   src: url("/IBMPlexMono Nerd/BlexMonoNerdFont-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-display: swap;
 }
 @font-face {
-  font-family: var(--typography-nerd);
+  font-family: "BlexMono Nerd Font";
   src: url("/IBMPlexMono Nerd/BlexMonoNerdFont-Bold.ttf") format("truetype");
   font-weight: 700;
   font-display: swap;
@@ -73,6 +73,4 @@ body {
 }
 .mono, .nerd {
   font-family: var(--typography-nerd);
-  font-size: 1em;
-  font-weight: inherit;
 }

@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<{
 });
 
 // Свойства в стили
-const flex_styles = use_css({
+const flex_styles = use_css(() =>({
   display: props.inline ? "inline-flex" : "flex",
   flexDirection: props.direction,
   flexWrap: props.wrap,
@@ -54,7 +54,7 @@ const flex_styles = use_css({
   borderRadius: get_nums(props.radius),
   color: get_color(props.color),
   backgroundColor: get_color(props.color_bg)
-});
+}));
 </script>
 
 <template>

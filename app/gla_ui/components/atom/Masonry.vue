@@ -28,12 +28,12 @@ const container = ref<HTMLElement | null>(null); // Ссылка на DOM кон
 const container_height = ref(0); // Вычисленная высота контейнера
 
 // Стили контейнера
-const container_styles = use_css({
+const container_styles = use_css(() => ({
   height: container_height.value > 0 ? `${container_height.value}px` : undefined,
   padding: get_nums(props.padding),
   borderRadius: get_nums(props.radius),
   position: "relative"
-});
+}));
 
 // Вычисляем значение gap в rem
 const gap_value = computed(() => {
