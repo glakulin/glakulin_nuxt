@@ -1,8 +1,7 @@
 <!-- Комопнент для текстовых блоков -->
 
 <script setup lang="ts">
-import { tokens, type Size, type Color, get_color } from "~/gla_ui/tokens";
-import { Flex } from "..";
+import { tokens, type Size } from "~/gla_ui/tokens";
 
 // Свойства
 const props = withDefaults(defineProps<{
@@ -26,11 +25,10 @@ const text_styles = use_css(() => ({
 </script>
 
 <template>
-  <Flex
-    :tag="props.tag"
+  <component
+    :is="props.tag"
     :class="`${props.family} ${text_styles}`"
-    align_items="center"
   >
     <slot />
-  </Flex>
+  </component>
 </template>

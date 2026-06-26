@@ -34,3 +34,6 @@ export function get_color(color: Color): string {
   }
   return color;
 }
+
+// Константа для переходов
+export const transition: string = "0.333s ease-out";

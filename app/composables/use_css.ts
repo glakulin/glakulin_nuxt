@@ -2,11 +2,11 @@ import { computed, ref } from 'vue';
 import { useHead } from '#app';
 import type { Properties } from 'csstype';
 
-type CSSObject = Properties<string | number> & {
-  [key: `:${string}`]: CSSObject;
-  [key: `::${string}`]: CSSObject;
-  [key: `@${string}`]: CSSObject;
-  [key: string]: string | number | CSSObject | undefined;
+type CSS_Object = Properties<string | number> & {
+  [key: `:${string}`]: CSS_Object;
+  [key: `::${string}`]: CSS_Object;
+  [key: `@${string}`]: CSS_Object;
+  [key: string]: string | number | CSS_Object | undefined;
 };
 
 const UNITLESS_PROPS = new Set([
@@ -27,72 +27,71 @@ function hash(str: string): string {
   return (h >>> 0).toString(36).slice(0, 5);
 }
 
-function getAtomicClass(prop: string, value: string | number, context: string = '') {
-  let cssValue = String(value);
+function get_atomic_class(prop: string, value: string | number, context: string = '') {
+  let css_value = String(value);
   if (typeof value === 'number' && !UNITLESS_PROPS.has(prop)) {
-    cssValue = `${value}px`;
+    css_value = `${value}px`;
   }
   
-  const kebabProp = to_kebab(prop);
-  const key = `${context}|${kebabProp}|${cssValue}`;
-  const className = hash(key);
+  const kebab_prop = to_kebab(prop);
+  const key = `${context}|${kebab_prop}|${css_value}`;
+  const class_name = hash(key);
   
-  const escapedContext = context.replace(/:/g, '\\:');
-  const fullClassName = `${escapedContext}gla-${className}`;
+  const full_class_name = `gla-${class_name}`;
   
-  const selector = `.${fullClassName}${context}`;
-  const css = `${selector} { ${kebabProp}: ${cssValue}; }`;
+  const selector = `.${full_class_name}${context}`;
+  const css = `${selector} { ${kebab_prop}: ${css_value}; }`;
   
-  return { className: fullClassName, css };
+  return { className: full_class_name, css };
 }
 
-function processAtomic(styles: CSSObject, context: string = '') {
+function process_atomic(styles: CSS_Object, context: string = '') {
   const classes: string[] = [];
-  const cssRules: string[] = [];
+  const css_rules: string[] = [];
   
   for (const [key, value] of Object.entries(styles)) {
     if (value === undefined || value === null) continue;
     
     if (typeof value === 'object') {
       if (key.startsWith(':') || key.startsWith('::')) {
-        const nested = processAtomic(value, context + key);
+        const nested = process_atomic(value, context + key);
         classes.push(...nested.classes);
-        cssRules.push(...nested.cssRules);
+        css_rules.push(...nested.css_rules);
       } else if (key.startsWith('@')) {
-        const nested = processAtomic(value, context);
+        const nested = process_atomic(value, context);
         classes.push(...nested.classes);
-        cssRules.push(`${key} { ${nested.cssRules.join(' ')} }`);
+        css_rules.push(`${key} { ${nested.css_rules.join(' ')} }`);
       } else {
-        const nested = processAtomic(value, context + ' ' + key);
+        const nested = process_atomic(value, context + ' ' + key);
         classes.push(...nested.classes);
-        cssRules.push(...nested.cssRules);
+        css_rules.push(...nested.css_rules);
       }
     } else {
-      const atomic = getAtomicClass(key, value, context);
+      const atomic = get_atomic_class(key, value, context);
       classes.push(atomic.className);
-      cssRules.push(atomic.css);
+      css_rules.push(atomic.css);
     }
   }
   
-  return { classes, cssRules };
+  return { classes, css_rules };
 }
 
 // Глобальное хранилище
-const globalCssRules = new Set<string>();
-const styleVersion = ref(0);
+const global_css_rules = new Set<string>();
+const style_version = ref(0);
 
-export function use_css(styles: CSSObject | (() => CSSObject)) {
+export function use_css(styles: CSS_Object | (() => CSS_Object)) {
   const resolved_styles = typeof styles === 'function' 
     ? computed(styles) 
     : computed(() => styles);
   
-  const classList = computed(() => {
-    const { classes, cssRules } = processAtomic(resolved_styles.value);
+  const class_list = computed(() => {
+    const { classes, css_rules } = process_atomic(resolved_styles.value);
     
-    for (const rule of cssRules) {
-      if (!globalCssRules.has(rule)) {
-        globalCssRules.add(rule);
-        styleVersion.value++;
+    for (const rule of css_rules) {
+      if (!global_css_rules.has(rule)) {
+        global_css_rules.add(rule);
+        style_version.value++;
       }
     }
     
@@ -102,13 +101,13 @@ export function use_css(styles: CSSObject | (() => CSSObject)) {
   // Вызываем useHead прямо здесь. Unhead возьмет на себя счетчик ссылок
   useHead({
     style: computed(() => {
-      const v = styleVersion.value; 
+      const v = style_version.value; 
       return [{
-        id: 'gla-atomic-registry',
-        innerHTML: Array.from(globalCssRules).join('\n')
+        id: 'gla_atomic_registry',
+        innerHTML: Array.from(global_css_rules).join('\n')
       }];
     })
   });
 
-  return classList;
+  return class_list;
 }
