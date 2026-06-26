@@ -45,32 +45,30 @@ const props = withDefaults(defineProps<{
 });
 
 // Свойства в стили
-const grid_styles = computed(() => {
-  return {
-    display: props.inline ? "inline-grid" : "grid",
-    gridTemplateColumns: props.columns,
-    gridTemplateRows: props.rows,
-    gridTemplateAreas: props.areas,
-    gridAutoFlow: props.auto_flow,
-    gridAutoColumns: props.auto_columns,
-    gridAutoRows: props.auto_rows,
+const grid_styles = use_css({
+  display: props.inline ? "inline-grid" : "grid",
+  gridTemplateColumns: props.columns,
+  gridTemplateRows: props.rows,
+  gridTemplateAreas: props.areas,
+  gridAutoFlow: props.auto_flow,
+  gridAutoColumns: props.auto_columns,
+  gridAutoRows: props.auto_rows,
 
-    alignItems: props.align_items,
-    justifyItems: props.justify_items,
-    alignContent: props.align_content,
-    justifyContent: props.justify_content,
+  alignItems: props.align_items,
+  justifyItems: props.justify_items,
+  alignContent: props.align_content,
+  justifyContent: props.justify_content,
 
-    gap: get_nums(props.gap),
-    padding: get_nums(props.padding),
-    borderRadius: get_nums(props.radius)
-  };
+  gap: get_nums(props.gap),
+  padding: get_nums(props.padding),
+  borderRadius: get_nums(props.radius)
 });
 </script>
 
 <template>
   <component
     :is="props.tag"
-    :style="grid_styles"
+    :class="grid_styles"
   >
     <slot />
   </component>
