@@ -1,13 +1,11 @@
 <script setup lang="ts">
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   name: string; // Имя иконки
 }>(), {
-  name: "home"
+  name: "fa-heart"
 });
 </script>
 
 <template>
-  <span class="material-symbols-rounded">
-    {{ props.name }}
-  </span>
+  <i class="nf" :class="'nf-' + name"></i>
 </template>
