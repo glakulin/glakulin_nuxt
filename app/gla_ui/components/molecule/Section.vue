@@ -6,15 +6,16 @@ import { Flex, Text } from '../';
  <Flex
   tag="section"
   direction="column"
-  :gap="[48]"
+  :gap="[40]"
  >
   <Text
     tag="h1"
     family="heading"
     size="xl"
-    :gap="[16]"
   >
-    <slot name="heading">Heading</slot>
+    <Flex :gap="[16]">
+      <slot name="heading">Heading</slot>
+    </Flex>
   </Text>
   <slot />
  </Flex>  
