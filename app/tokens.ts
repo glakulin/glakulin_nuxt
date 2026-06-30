@@ -158,4 +158,4 @@ export const TOKENS: Tokens = {
       xl: 256
     }
   }
-} as const;
+} as const satisfies Tokens;
