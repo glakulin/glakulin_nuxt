@@ -1,3 +1,5 @@
+// Хук для css-in-js
+
 import { computed } from "vue";
 import type { CSSProperties } from "vue";
 import { get_rem } from "~/utilities";
