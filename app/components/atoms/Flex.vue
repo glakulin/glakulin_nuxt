@@ -3,7 +3,7 @@
 <script setup lang="ts">
 import type { CSSProperties as CSSP } from "vue";
 import { use_css } from "~/composables/use_css";
-import { get_rem, type Number_Rem } from "~/utilities";
+import { type Number_Rem } from "~/utilities";
 
 // Свойства
 const props = withDefaults(defineProps<{
@@ -36,8 +36,8 @@ const class_name = computed(() => css({
   flexShrink: props.shrink,
 
   gap: props.gap,
-  padding: props.padding ? get_rem(props.padding) : undefined,
-  borderRadius: props.radius ? get_rem(props.radius) : undefined
+  padding: props.padding,
+  borderRadius: props.radius
 }));
 </script>
 

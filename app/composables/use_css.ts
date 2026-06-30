@@ -2,11 +2,11 @@
 
 import { computed } from "vue";
 import type { CSSProperties } from "vue";
-import { get_rem } from "~/utilities";
+import { get_rem, type Number_Rem } from "~/utilities";
 
 // Значения css
-export type Css_Value = string | number | null | undefined | false;
-export type Css_Pseudo = `:${string}` | "hover" | "focus" | "active" | "visited" | "disabled" | "checked" | "focusVisible" | "focusWithin";
+export type Css_Value = string  | null | undefined | false | Number_Rem;
+export type Css_Pseudo = "hover" | "focus" | "active" | "visited" | "disabled" | "checked" | "focusVisible" | "focusWithin";
 export type Css_Rule = {
   [key in keyof CSSProperties]?: CSSProperties[key] | Css_Value;
 } & {
@@ -49,6 +49,17 @@ const UNITLESS_PROPERTIES = new Set([
   "widows",
   "z-index",
   "zoom"
+]);
+
+const PSEUDO_KEYS = new Set<Css_Pseudo>([
+  "hover",
+  "focus",
+  "active",
+  "visited",
+  "disabled",
+  "checked",
+  "focusVisible",
+  "focusWithin"
 ]);
 
 // Хэширование строки
@@ -122,7 +133,15 @@ const insert_rule = (rule: string): void => {
     return;
   }
 
-  style_sheet.insertRule(rule, style_sheet.cssRules.length);
+  try {
+    style_sheet.insertRule(rule, style_sheet.cssRules.length);
+  } catch {
+    // Невалидное правило
+  }
+};
+
+const is_pseudo_key = (value: string): value is Css_Pseudo => {
+  return value.startsWith(":") || PSEUDO_KEYS.has(value as Css_Pseudo);
 };
 
 // Css-in-js

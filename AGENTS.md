@@ -19,6 +19,21 @@
 - No lint, typecheck, or test scripts configured
 - Nuxt 4 uses `compatibilityDate: '2025-07-15'`
 - Run `bun run postinstall` after dependency changes (auto-runs on install)
+- Do not use `bun run build` as an error check: it can succeed while building an error page
 
 ## Custom instructions
-instructions/
+- Read and follow `instructions/system.md` before work
+- Use `instructions/code_style.md` for generated code
+- Use `instructions/code_review.md` for code reviews
+- Use `instructions/context_export.md` when exporting session context
+- Use `instructions/context_import.md` when importing session context
+- Use `instructions/create_markdown.md` when authoring reusable agent instructions
+
+## Instruction summary
+- Start answers with `[VERIFIED]`, `[WEB_SEARCH]`, or `[ASSUMPTION - confirm?]` when following instruction files
+- Ask up to 3 concise clarification questions with multiple-choice options if required context is missing
+- Search web for latest APIs/docs/versions when freshness matters
+- Never fabricate facts, paths, package names, sources, or numbers
+- Code style: 2 spaces, snake_case vars/functions, Pascal_Snake_Case types, UPPER_SNAKE_CASE constants
+- Prefer strict typing, explicit code, reusable functions, and performance-oriented solutions
+- Comments should explain WHAT the code does, not WHY
