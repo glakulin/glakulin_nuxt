@@ -21,4 +21,4 @@
 - Run `bun run postinstall` after dependency changes (auto-runs on install)
 
 ## Custom instructions
-./instructions/
+instructions/
