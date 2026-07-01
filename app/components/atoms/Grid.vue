@@ -1,4 +1,4 @@
-<!-- Компонент для flexbox -->
+<!-- Компонент для gridbox -->
 
 <script setup lang="ts">
 import type { CSSProperties as CSSP } from "vue";
@@ -10,8 +10,12 @@ const props = withDefaults(defineProps<{
   tag?: keyof HTMLElementTagNameMap; // Тег
 
   inline?: boolean; // inline или нет
-  direction?: CSSP["flexDirection"]; // Направление
-  wrap?: CSSP["flexWrap"]; // Перенос
+  template_columns?: CSSP["gridTemplateColumns"]; // Колонки
+  template_rows?: CSSP["gridTemplateRows"]; // Строки
+  template_areas?: CSSP["gridTemplateAreas"]; // Области
+  auto_flow?: CSSP["gridAutoFlow"]; // Поток
+  auto_columns?: CSSP["gridAutoColumns"]; // Авто-колонки
+  auto_rows?: CSSP["gridAutoRows"]; // Авто-строки
 
   justify_items?: CSSP["justifyItems"]; // Выравнивание элементов по горизонтали
   align_items?: CSSP["alignItems"]; // Выравнивание элементов по вертикали
@@ -30,14 +34,18 @@ const props = withDefaults(defineProps<{
 // Свойства в стили
 const css = use_css();
 const class_name = computed(() => css({
-  display: props.inline ? "inline-flex" : "flex",
-  flexDirection: props.direction,
-  flexWrap: props.wrap,
+  display: props.inline ? "inline-grid" : "grid",
+  gridTemplateColumns: props.template_columns,
+  gridTemplateRows: props.template_rows,
+  gridTemplateAreas: props.template_areas,
+  gridAutoFlow: props.auto_flow,
+  gridAutoColumns: props.auto_columns,
+  gridAutoRows: props.auto_rows,
 
-  alignItems: props.align_items,
-  alignContent: props.align_content,
   justifyItems: props.justify_items,
+  alignItems: props.align_items,
   justifyContent: props.justify_content,
+  alignContent: props.align_content,
 
   gap: props.gap,
   padding: props.padding,

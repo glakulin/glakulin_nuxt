@@ -21,8 +21,11 @@
 - Run `bun run postinstall` after dependency changes (auto-runs on install)
 - Do not use `bun run build` as an error check: it can succeed while building an error page
 
+## Session start (mandatory)
+- Read `context.json` and follow `instructions/context_import.md` at the very beginning of every session
+- Then read and follow `instructions/system.md` before work
+
 ## Custom instructions
-- Read and follow `instructions/system.md` before work
 - Use `instructions/code_style.md` for generated code
 - Use `instructions/code_review.md` for code reviews
 - Use `instructions/context_export.md` when exporting session context
