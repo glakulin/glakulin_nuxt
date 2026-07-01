@@ -113,24 +113,26 @@ const get_rule = (class_name: string, selector: string, property: string, value:
   return `.${class_name}${selector}{${property}:${value}}`;
 };
 
-// Псевдо-ключ
-const is_pseudo_key = (value: string): value is Css_Pseudo => {
-  return value.startsWith(":") || PSEUDO_KEYS.has(value as Css_Pseudo);
-};
+// Флаг однократной вставки head
+let head_injected = false;
 
 // Css-in-js
 export const use_css = () => {
   const rules = useState<Record<string, string>>("use_css_rules", () => ({}));
   const css_text = useState("use_css_text", () => "");
 
-  useHead({
-    style: [
-      {
-        id: STYLE_ID,
-        textContent: css_text
-      }
-    ]
-  });
+  if (!head_injected) {
+    head_injected = true;
+
+    useHead({
+      style: [
+        {
+          id: STYLE_ID,
+          textContent: css_text
+        }
+      ]
+    });
+  }
 
   // Вставка атомарного правила
   const insert_css_rule = (class_names: string[], selector: string, property: string, value: string): void => {
