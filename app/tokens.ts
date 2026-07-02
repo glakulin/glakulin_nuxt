@@ -4,28 +4,39 @@
 // Типы для значений токенов
 
 // Типы для цветов
-type Color = { [_key: string]: string }
-type Colors = { [_key: string]: Color }
+export type Color_Name = "gray" | "accent" | "error" | "warning" | "success" | "info";
+export type Color_Shade = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+export type Color_Scheme = `${Color_Name}_${Color_Shade}`;
+
+type Color = Record<Color_Shade, string>;
+type Colors = Record<Color_Name, Color>;
 
 // Типы для размеров
-type Size = "default" | "xs" | "sm" | "md" | "lg" | "xl"
-type Record_Size_Number = Record<Size, number>
-type Sizes = { [_key: string]: Record_Size_Number }
+export type Size = "default" | "xs" | "sm" | "md" | "lg" | "xl";
+type Record_Size_Number = Record<Size, number>;
+type Sizes = { 
+  screen: Record_Size_Number;
+  screen_padding: Record_Size_Number;
+}
 
 // Типы для шрифтов
 type Font_Style = {
-  family: string
-  size: Record_Size_Number
-  weight: Record_Size_Number
+  family: string;
+  size: Record_Size_Number;
+  weight: Record_Size_Number;
 }
-type Typography = { [_key: string]: Font_Style | string }
+type Typography = { 
+  heading: Font_Style;
+  body: Font_Style;
+  mono: string;
+}
 
 
 // Тип объекта токенов
 type Tokens = {
-  colors: Colors
-  typography: Typography
-  size: Sizes
+  colors: Colors;
+  typography: Typography;
+  size: Sizes;
 }
 
 
@@ -101,7 +112,7 @@ export const TOKENS: Tokens = {
   },
   typography: {
     heading: {
-      family: "IBM Plex Sans Condensed",
+      family: "IBM Plex Serif",
       size: {
         default: 40,
         xs: 44,

@@ -1,10 +1,18 @@
 <!-- Главная страница -->
 
 <script setup lang="ts">
-import Flex from '~/components/atoms/Flex.vue';
+import { Flex, Icon, Text } from "~/components/atoms";
+import { Section } from "~/components/molecules";
 
 </script>
 
 <template>
-  <Flex :padding="8">test</Flex>
+  <Section>
+    <template #heading><Icon name="nf-md-hand_wave" />Hello</template>
+    <Flex
+      direction="column" 
+    >
+      <Text family="heading" size="sm">I'm Glakulin</Text>
+    </Flex>
+  </Section>
 </template>

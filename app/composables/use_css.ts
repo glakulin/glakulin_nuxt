@@ -1,17 +1,14 @@
 // Хук для css-in-js
 
-import { computed } from "vue";
 import type { CSSProperties } from "vue";
 import { get_rem, type Number_Rem } from "~/utilities";
 
 // Значения css
-export type Css_Value = string  | null | undefined | false | Number_Rem;
+export type Css_Value = string | null | undefined | false | Number_Rem;
 export type Css_Pseudo = "hover" | "focus" | "active" | "visited" | "disabled" | "checked" | "focusVisible" | "focusWithin";
-export type Css_Rule = {
-  [key in keyof CSSProperties]?: CSSProperties[key] | Css_Value;
-} & {
-  [key in Css_Pseudo]?: Css_Rule;
-};
+type Css_Base_Rule = { [key in keyof CSSProperties]?: CSSProperties[key] | Css_Value };
+type Css_Pseudo_Rule = { [key in Css_Pseudo]?: Css_Rule };
+export type Css_Rule = Css_Base_Rule & Css_Pseudo_Rule;
 
 // Настройки
 const STYLE_ID = "use-css";
@@ -48,7 +45,8 @@ const UNITLESS_PROPERTIES = new Set([
   "tab-size",
   "widows",
   "z-index",
-  "zoom"
+  "zoom",
+  "font-weight"
 ]);
 
 const PSEUDO_KEYS = new Set<Css_Pseudo>([
@@ -80,14 +78,18 @@ const get_css_property = (value: string): string => {
 };
 
 // Значение в css формат
-const get_css_value = (property: string, value: string | number): string => {
+const get_css_value = (property: string, value: string | number | readonly number[]): string => {
   if (typeof value === "number") {
     return value === 0 || UNITLESS_PROPERTIES.has(property)
       ? String(value)
       : get_rem(value);
   }
 
-  return value;
+  if (typeof value === "string") {
+    return value;
+  }
+
+  return get_rem(value);
 };
 
 // Ключ правила
@@ -112,51 +114,26 @@ const get_rule = (class_name: string, selector: string, property: string, value:
   return `.${class_name}${selector}{${property}:${value}}`;
 };
 
-// Получение style sheet
-const get_style_sheet = (): CSSStyleSheet | null => {
-  let element = document.getElementById(STYLE_ID) as HTMLStyleElement | null;
-
-  if (!element) {
-    element = document.createElement("style");
-    element.id = STYLE_ID;
-    document.head.appendChild(element);
-  }
-
-  return element.sheet;
-};
-
-// Вставка правила в css
-const insert_rule = (rule: string): void => {
-  const style_sheet = get_style_sheet();
-
-  if (!style_sheet) {
-    return;
-  }
-
-  try {
-    style_sheet.insertRule(rule, style_sheet.cssRules.length);
-  } catch {
-    // Невалидное правило
-  }
-};
-
-const is_pseudo_key = (value: string): value is Css_Pseudo => {
-  return value.startsWith(":") || PSEUDO_KEYS.has(value as Css_Pseudo);
-};
+// Флаг однократной вставки head
+let head_injected = false;
 
 // Css-in-js
 export const use_css = () => {
   const rules = useState<Record<string, string>>("use_css_rules", () => ({}));
-  const css_text = computed(() => Object.values(rules.value).join(""));
+  const css_text = useState("use_css_text", () => "");
 
-  useHead({
-    style: [
-      {
-        id: STYLE_ID,
-        textContent: css_text
-      }
-    ]
-  });
+  if (!head_injected) {
+    head_injected = true;
+
+    useHead({
+      style: [
+        {
+          id: STYLE_ID,
+          textContent: css_text
+        }
+      ]
+    });
+  }
 
   // Вставка атомарного правила
   const insert_css_rule = (class_names: string[], selector: string, property: string, value: string): void => {
@@ -173,10 +150,7 @@ export const use_css = () => {
     const rule = get_rule(class_name, selector, property, value);
 
     rules.value[rule_key] = rule;
-
-    if (import.meta.client) {
-      insert_rule(rule);
-    }
+    css_text.value += rule;
   };
 
   // Вставка объекта стилей
@@ -186,7 +160,7 @@ export const use_css = () => {
         continue;
       }
 
-      if (typeof raw_value === "object") {
+      if (typeof raw_value === "object" && !Array.isArray(raw_value)) {
         insert_css_rules(class_names, raw_value as Css_Rule, `${selector}${get_selector(raw_property)}`);
         continue;
       }
