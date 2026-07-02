@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Flex } from "../atoms";
+import { Flex, Icon, Text } from "../atoms";
 </script>
 
 <template>
@@ -7,9 +7,11 @@ import { Flex } from "../atoms";
     tag="section"
     direction="column" :gap="48"
   >
-    <Flex :gap="12">
-      <slot name="heading"></slot>
-    </Flex>
+    <Text family="heading" size="xl">
+      <Flex :gap="12">
+        <slot name="heading"><Icon name="nf-md-format_section" />Section</slot>
+      </Flex>
+    </Text>
     <slot />
   </Flex>
 </template>

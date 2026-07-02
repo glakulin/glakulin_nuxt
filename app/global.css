@@ -6,7 +6,9 @@
 
 /* Сброс всех стилей */
 * {
-  all: inherit;
+  all: unset;
+  color: inherit;
+  font: inherit;
 }
 
 script, style {

@@ -45,7 +45,8 @@ const UNITLESS_PROPERTIES = new Set([
   "tab-size",
   "widows",
   "z-index",
-  "zoom"
+  "zoom",
+  "font-weight"
 ]);
 
 const PSEUDO_KEYS = new Set<Css_Pseudo>([

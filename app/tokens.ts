@@ -4,15 +4,12 @@
 // Типы для значений токенов
 
 // Типы для цветов
-type Color = { [_key: string]: string; }
-type Colors = {
-  gray: Color;
-  accent: Color;
-  error: Color;
-  warning: Color;
-  success: Color;
-  info: Color;
-}
+export type Color_Name = "gray" | "accent" | "error" | "warning" | "success" | "info";
+export type Color_Shade = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+export type Color_Scheme = `${Color_Name}_${Color_Shade}`;
+
+type Color = Record<Color_Shade, string>;
+type Colors = Record<Color_Name, Color>;
 
 // Типы для размеров
 export type Size = "default" | "xs" | "sm" | "md" | "lg" | "xl";
