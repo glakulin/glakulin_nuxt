@@ -15,7 +15,7 @@ type Colors = {
 }
 
 // Типы для размеров
-type Size = "default" | "xs" | "sm" | "md" | "lg" | "xl";
+export type Size = "default" | "xs" | "sm" | "md" | "lg" | "xl";
 type Record_Size_Number = Record<Size, number>;
 type Sizes = { 
   screen: Record_Size_Number;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Flex } from '../atoms';
+import { Flex } from "../atoms";
 </script>
 
 <template>

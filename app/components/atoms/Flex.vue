@@ -2,7 +2,6 @@
 
 <script setup lang="ts">
 import type { CSSProperties as CSSP } from "vue";
-import { use_css } from "~/composables/use_css";
 import { type Number_Rem } from "~/utilities";
 
 // Свойства
@@ -28,7 +27,8 @@ const props = withDefaults(defineProps<{
 });
 
 // Свойства в стили
-const class_name = computed(() => use_css()({
+const css = use_css();
+const class_name = computed(() => css({
   display: props.inline ? "inline-flex" : "flex",
   flexDirection: props.direction,
   flexWrap: props.wrap,
