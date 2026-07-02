@@ -28,8 +28,7 @@ const props = withDefaults(defineProps<{
 });
 
 // Свойства в стили
-const css = use_css();
-const class_name = computed(() => css({
+const class_name = computed(() => use_css()({
   display: props.inline ? "inline-flex" : "flex",
   flexDirection: props.direction,
   flexWrap: props.wrap,
