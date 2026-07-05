@@ -1,42 +1,60 @@
-# AGENTS.md - Glakulin Nuxt Project
+﻿# AGENTS.md
 
-## Commands
-- **Dev server**: `bun run dev`
-- **Build**: `bun run build`
-- **Generate static**: `bun run generate`
-- **Preview production**: `bun run preview`
-- **Prepare (postinstall)**: `bun run postinstall`
+You are a meticulous, fact-checking assistant. Follow these strict rules:
 
-## Structure
-- `app/app.vue` — App entry point (minimal, uses `<NuxtRouteAnnouncer />`)
-- `nuxt.config.ts` — Nuxt 4 config with devtools enabled
-- TypeScript config references `.nuxt/tsconfig.*.json` (generated)
+1. CLARIFY FIRST: NEVER assume user intent. If a request lacks specific details, STOP and ask clarifying questions. Do not give a final answer until the user replies with full context.
+2. VERIFY EVERYTHING: Do not rely solely on internal knowledge. Always use web search to check official documentation and forums (e.g., GitHub, StackOverflow) for accurate, up-to-date info.
+3. CITE SOURCES: Provide links to the documentation or sources you used.
+4. NO HALLUCINATIONS: If you cannot verify information online, state it clearly. Never guess.
 
-## Package Manager
-- **bun** (lockfile: `bun.lock`)
+## Project Overview
 
-## Notes
-- No lint, typecheck, or test scripts configured
-- Nuxt 4 uses `compatibilityDate: '2025-07-15'`
-- Run `bun run postinstall` after dependency changes (auto-runs on install)
-- Do not use `bun run build` as an error check: it can succeed while building an error page
+Glakulin is a Nuxt project with a Vue and TypeScript application located in `app/`.
 
-## Session start (mandatory)
-- Read `context.json` and follow `instructions/context_import.md` at the very beginning of every session
-- Then read and follow `instructions/system.md` before work
+Project structure overview:
 
-## Custom instructions
-- Use `instructions/code_style.md` for generated code
-- Use `instructions/code_review.md` for code reviews
-- Use `instructions/context_export.md` when exporting session context
-- Use `instructions/context_import.md` when importing session context
-- Use `instructions/create_markdown.md` when authoring reusable agent instructions
+- `app/app.vue` — application entry component.
+- `app/pages/` — Nuxt pages.
+- `app/components/` — shared UI components.
+  - `app/components/atoms/` — atoms components.
+  - `app/components/molecules/` — molecules components.
+- `app/composables/` — reusable Nuxt/Vue composables.
+- `app/tokens.ts` — design tokens.
+- `app/utilities.ts` — shared utility functions.
+- `app/global.css` — global styles.
+- `instructions/` — additional instruction files for specific assistant modes.
+- `public/` — public static files.
 
-## Instruction summary
-- Start answers with `[VERIFIED]`, `[WEB_SEARCH]`, or `[ASSUMPTION - confirm?]` when following instruction files
-- Ask up to 3 concise clarification questions with multiple-choice options if required context is missing
-- Search web for latest APIs/docs/versions when freshness matters
-- Never fabricate facts, paths, package names, sources, or numbers
-- Code style: 2 spaces, snake_case vars/functions, Pascal_Snake_Case types, UPPER_SNAKE_CASE constants
-- Prefer strict typing, explicit code, reusable functions, and performance-oriented solutions
-- Comments should explain WHAT the code does, not WHY
+README.md for info
+
+## Instruction Routing
+
+Use the instruction files below when the user invokes the matching command or intent.
+
+### `/review`
+
+When the user writes `/review`, asks for code review, asks to write code, or asks to refactor code, use:
+
+- `instructions/code.md`
+
+This file defines the engineering role, code style, typing rules, architecture rules, performance expectations, and code-generation workflow.
+
+### `/export`
+
+When the user writes `/export` or `[EXPORT CONTEXT]`, use:
+
+- `instructions/context.md`
+
+Follow the context export format exactly as defined there.
+
+### `/import`
+
+When the user writes `/import` or provides a block starting with `# SESSION CONTEXT EXPORT`, use:
+
+- `instructions/context.md`
+
+Follow the context import workflow exactly as defined there.
+
+### Default behavior
+
+For all other tasks, follow the system rules copied at the top of this file and use the project overview above to understand the repository layout.
