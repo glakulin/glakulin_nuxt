@@ -1,27 +1,14 @@
 {
-  "session_summary": "Fixed use_css composable (array values, SSR hydration, dead code), created Grid.vue, code reviews of Flex/Grid/use_css",
+  "session_summary": "Session restored from AGENTS.md/context.json. Text.vue work is considered complete by the user. Context was trimmed to keep only active project constraints, preferences, and reusable decisions.",
   "user_goals": [
-    "Fix array values processing in use_css (gap: [4, 2])",
-    "Fix SSR hydration conflict (remove insertRule, use useHead only)",
-    "Create Grid.vue component matching Flex.vue pattern",
-    "Code review Flex.vue, Grid.vue, use_css.ts",
-    "Remove dead code (is_pseudo_key, get_style_sheet, insert_rule)",
-    "Fix useHead called multiple times (singleton flag)",
-    "Fix Css_Rule type for pseudo autocomplete",
-    "Export session context"
+    "Read AGENTS.md and restore project context",
+    "Keep context concise and remove obsolete Text.vue review details"
   ],
   "key_decisions": [
-    "Array values no longer treated as Css_Rule objects — separate Array.isArray check added",
-    "get_css_value restructured: number → rem/unitless, string → as-is, array → get_rem(map)",
-    "insertRule + get_style_sheet removed — useHead only, no client-side DOM mutation",
-    "css_text changed from computed(() => Object.values(...).join()) to useState with manual += append",
-    "useHead called once via module-level head_injected flag, not per-component",
-    "is_pseudo_key removed (dead code, never called)",
-    "Css_Rule split into Css_Base_Rule & Css_Pseudo_Rule for TS autocomplete",
-    "basis, grow, shrink, flex removed from Flex.vue (flex-item, not container properties)",
-    "align/justify props renamed to snake_case in Flex.vue",
-    "Grid.vue mirrors Flex.vue pattern with grid-specific properties",
-    "build is NOT reliable for error checking (can build error page)"
+    "Global styles such as body/html/reset should live in global CSS or be injected via useHead/CSS variables, not via v-bind in page-scoped component CSS",
+    "Current use_css is appropriate for generated atomic component classes, not global selectors like body or :root",
+    "Explicit use_css imports were removed by user across components in favor of Nuxt auto-imports",
+    "Text.vue is considered ready by the user"
   ],
   "technical_details": {
     "os": "win32",
@@ -30,35 +17,30 @@
     "node_framework": "nuxt ^4.4.8",
     "vue_version": "^3.5.38",
     "project_path": "G:\\projects\\glakulin_nuxt",
-    "files_modified": [
-      "app/composables/use_css.ts",
-      "app/components/atoms/Flex.vue",
-      "app/components/atoms/Grid.vue",
-      "context.json"
-    ],
-    "tools_used": ["read", "edit", "write", "create_file", "replace_string_in_file", "grep", "get_errors"],
-    "code_style": {
-      "indent": "2 spaces",
-      "variables": "snake_case",
-      "types": "Pascal_Snake_Case",
-      "constants": "UPPER_SNAKE_CASE",
-      "comments": "Russian, explain WHAT not WHY"
-    },
-    "patterns": {
-      "css_unit_conversion": "value * 0.0625rem",
-      "naming_prefix": "gla_ for generated classes"
+    "configurations": {
+      "code_style": {
+        "indent": "2 spaces",
+        "variables": "snake_case",
+        "types": "Pascal_Snake_Case",
+        "constants": "UPPER_SNAKE_CASE",
+        "comments": "Russian, explain WHAT not WHY"
+      },
+      "generated_class_prefix": "gla_",
+      "css_unit_conversion": "value * 0.0625rem"
     }
   },
-  "pending_items": [
-    "Nothing pending"
-  ],
+  "pending_items": [],
   "user_preferences": {
     "style": "concise",
-    "language": "ru"
+    "language": "ru",
+    "review_style": "Focus on factual correctness and real issues; do not insist on readability refactors the user explicitly accepts",
+    "imports": "User removed explicit use_css imports across components and prefers relying on auto-imports"
   },
   "critical_constraints": [
-    "Never use bun run build as error check",
+    "Never use bun run build as an error check",
     "Do not add emojis unless asked",
-    "Never fabricate facts, paths, package names"
+    "Never fabricate facts, paths, package names, sources, or numbers",
+    "Search web for latest APIs/docs/versions when freshness matters",
+    "Ask up to 3 concise clarification questions with multiple-choice options if required context is missing"
   ]
 }
