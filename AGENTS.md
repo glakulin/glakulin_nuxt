@@ -25,6 +25,8 @@ Project structure overview:
 - `instructions/` — additional instruction files for specific assistant modes.
 - `public/` — public static files.
 
+README.md for info
+
 ## Instruction Routing
 
 Use the instruction files below when the user invokes the matching command or intent.
