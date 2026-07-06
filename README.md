@@ -480,7 +480,8 @@ app/
 ├── tokens.ts               # Design tokens
 ├── utilities.ts            # Utility functions (color, size, etc.)
 ├── composables/
-│   └── use_css.ts         # CSS-in-JS composable
+│   ├── use_css.ts         # CSS-in-JS composable
+│   └── use_window_size.ts # Reactive window size tracking
 ├── components/
 │   ├── atoms/
 │   │   ├── Style.vue       # Base styling component
@@ -601,6 +602,29 @@ const rem = get_rem(16); // "1rem"
 const remArray = get_rem([16, 24]); // "1rem 1.5rem"
 ```
 
+### `get_size(width: number): Size`
+
+Returns the current breakpoint name based on a window width. Breakpoints are taken from `TOKENS.size.screen`.
+
+```typescript
+import { get_size } from "~/utilities";
+
+const size = get_size(1024); // "md"
+```
+
+**Breakpoints:**
+
+| Size | Min width (px) |
+|------|----------------|
+| `default` | 390 |
+| `xs` | 576 |
+| `sm` | 768 |
+| `md` | 1024 |
+| `lg` | 1440 |
+| `xl` | 1920 |
+
+---
+
 ### `use_css()`
 
 A composable for CSS-in-JS. Creates atomic CSS classes from style objects.
@@ -632,6 +656,45 @@ const className = css({
 
 ---
 
+### `use_window_size()`
+
+A composable for reactively tracking the browser window dimensions and the current breakpoint.
+
+**Returns:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `width` | `Ref<number>` | Current window width (`window.innerWidth`) |
+| `height` | `Ref<number>` | Current window height (`window.innerHeight`) |
+| `size` | `ComputedRef<Size>` | Current breakpoint based on `width` (via `get_size`) |
+
+**Usage Examples:**
+
+```vue
+<script setup lang="ts">
+const { width, height, size } = use_window_size();
+</script>
+
+<template>
+  <Text :size="size">
+    Width: {{ width }}px, breakpoint: {{ size }}
+  </Text>
+</template>
+```
+
+```typescript
+// Conditional logic based on breakpoint
+const { size } = use_window_size();
+
+const columns = computed(() =>
+  size.value === "default" ? 1 : size.value === "xl" ? 4 : 2
+);
+```
+
+> **Note:** On the server (SSR) the values are `0` and `size` is `"default"`. They update on mount during hydration.
+
+---
+
 ## Project Structure
 
 ```text
@@ -647,7 +710,8 @@ app/
 │       ├── Section.vue
 │       └── index.ts
 ├── composables/        # Vue composables
-│   └── use_css.ts
+│   ├── use_css.ts
+│   └── use_window_size.ts
 ├── pages/              # App pages
 ├── tokens.ts           # Design tokens
 ├── utilities.ts        # Utility functions

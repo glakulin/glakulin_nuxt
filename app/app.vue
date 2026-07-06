@@ -3,6 +3,7 @@ import "~/global.css";
 import { Flex } from "./components/atoms";
 import { TOKENS } from "./tokens";
 
+// Адаптивные отступы
 const { size } = use_window_size();
 
 const screen_padding = computed(() => {
