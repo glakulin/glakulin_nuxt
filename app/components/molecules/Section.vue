@@ -15,7 +15,7 @@ const props = defineProps<{
     :gap="48"
     :css="props.css"
   >
-    <Text family="heading" size="xl">
+    <Text tag="h1" family="heading" size="xl">
       <Flex :gap="12">
         <slot name="heading"><Icon name="nf-md-format_section" />Section</slot>
       </Flex>
