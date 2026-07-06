@@ -5,6 +5,7 @@ import { Flex, Icon, Text } from "../atoms";
 // Свойства
 const props = defineProps<{
   css?: Css_Rule; // Дополнительные стили
+  anchor?: string;
 }>();
 </script>
 
@@ -15,6 +16,7 @@ const props = defineProps<{
     :gap="48"
     :css="props.css"
   >
+    <a :id="props.anchor" :style="{width: 0, height: 0, position: 'absolute'}"></a>
     <Text tag="h1" family="heading" size="xl">
       <Flex :gap="12">
         <slot name="heading"><Icon name="nf-md-format_section" />Section</slot>
