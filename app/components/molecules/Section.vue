@@ -1,3 +1,5 @@
+<!-- Компонент секции -->
+
 <script setup lang="ts">
 import { type Css_Rule } from "~/composables/use_css";
 import { Flex, Icon, Text } from "../atoms";
@@ -5,7 +7,7 @@ import { Flex, Icon, Text } from "../atoms";
 // Свойства
 const props = defineProps<{
   css?: Css_Rule; // Дополнительные стили
-  anchor?: string;
+  anchor?: string; // Якорь
 }>();
 </script>
 

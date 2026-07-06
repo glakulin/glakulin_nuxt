@@ -4,8 +4,7 @@
 import { Flex, Icon, Style, Text } from '~/components/atoms';
 import { Section } from '~/components/molecules';
 import Masonry from '~/components/molecules/Masonry.vue';
-import { TOKENS } from '~/tokens';
-import { get_rem } from '~/utilities';
+import { get_color, get_rem } from '~/utilities';
 
 // Скиллы
 type Skill = {
@@ -120,7 +119,7 @@ const adaptive = computed<Adaptive>(() => {
           <Text tag="h2" family="heading" size="sm">I'm Glakulin</Text>
           <Text tag="h6" family="body" size="default" color="gray_5">Daniel Vyakulin</Text>
         </Flex>
-        <Style tag="img" src="/logo.svg" :css="{ width: 'auto', height: get_rem(60) }" />
+        <svg height="60" width="60"><use href="/logo.svg"></use></svg>
       </Flex>
       <Flex direction="column" :gap="6">
         <Text tag="p" family="body" size="sm">
@@ -152,9 +151,9 @@ const adaptive = computed<Adaptive>(() => {
         :padding="16"
         :radius="6"
         :css="{
-          border: `${get_rem(2)} solid ${TOKENS.colors.gray[8]}`,
+          border: `${get_rem(2)} solid ${get_color('gray_8')}`,
           hover: {
-            borderColor: TOKENS.colors.accent[2]
+            borderColor: get_color('accent_2')
           },
 
           cursor: 'pointer',
