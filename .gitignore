@@ -25,3 +25,9 @@ logs
 
 # Vercel
 .vercel
+
+
+# Agents
+AGENTS.md
+instructions
+project_context.md
