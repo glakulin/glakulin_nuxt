@@ -14,6 +14,7 @@ import {
 } from "vue";
 import { type Number_Rem } from "~/utilities";
 import { Flex, Grid } from "../atoms";
+import { type Css_Rule } from "~/composables/use_css";
 
 // Тип для элемента
 type Masonry_Item = {
@@ -25,8 +26,6 @@ type Masonry_Item = {
 
 // Свойства
 const props = withDefaults(defineProps<{
-  tag?: keyof HTMLElementTagNameMap; // Тег
-
   mode: "vertical" | "horizontal" // Режим
   columns?: number; // Количество колонок
   rows?: number; // Количество строк
@@ -37,9 +36,9 @@ const props = withDefaults(defineProps<{
   gap?: Number_Rem; // Промежуток
   padding?: Number_Rem; // Отступы
   radius?: Number_Rem; // Скругление
+  css?: Css_Rule; // Дополнительные стили
 }>(), {
   // Значения по умолчанию
-  tag: "div",
   columns: 1,
   rows: 1
 });
@@ -85,8 +84,9 @@ const group_count = computed(() => {
 });
 
 // Стили контейнера
-const container_class_name = computed(() => css({
-  position: "relative"
+const container_css = computed<Css_Rule>(() => ({
+  position: "relative",
+  ...props.css
 }));
 
 // Стили измерительного слоя
@@ -101,9 +101,9 @@ const measure_class_name = computed(() => css({
 }));
 
 // Стили видимой группы
-const group_class_name = computed(() => css({
+const group_css = {
   minWidth: 0
-}));
+} as const;
 
 // Ширина элемента при измерении
 const measure_width = computed(() => {
@@ -302,8 +302,6 @@ onBeforeUnmount(() => {
 <template>
   <Grid
     :ref="set_container_ref"
-    :tag="props.tag"
-    :class="container_class_name"
     :template_columns="props.mode === 'vertical' ? `repeat(${group_count}, minmax(0, 1fr))` : undefined"
     :template_rows="props.mode === 'horizontal' ? `repeat(${group_count}, auto)` : undefined"
     :auto_flow="props.mode === 'horizontal' ? 'column' : undefined"
@@ -312,14 +310,15 @@ onBeforeUnmount(() => {
     :gap="props.gap"
     :padding="props.padding"
     :radius="props.radius"
+    :css="container_css"
   >
     <template v-if="!is_measuring">
       <Flex
         v-for="(group, group_index) in groups"
         :key="group_index"
-        :class="group_class_name"
         :direction="props.mode === 'vertical' ? 'column' : 'row'"
         :gap="props.gap"
+        :css="group_css"
       >
         <Render_Node
           v-for="(item, item_index) in group"

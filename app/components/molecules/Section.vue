@@ -1,11 +1,19 @@
 <script setup lang="ts">
+import { type Css_Rule } from "~/composables/use_css";
 import { Flex, Icon, Text } from "../atoms";
+
+// Свойства
+const props = defineProps<{
+  css?: Css_Rule; // Дополнительные стили
+}>();
 </script>
 
 <template>
   <Flex
     tag="section"
-    direction="column" :gap="48"
+    direction="column"
+    :gap="48"
+    :css="props.css"
   >
     <Text family="heading" size="xl">
       <Flex :gap="12">
