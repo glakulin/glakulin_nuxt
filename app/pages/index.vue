@@ -12,7 +12,8 @@ type Skill = {
   name: string,
   icon: string,
   description: string,
-  group: string
+  group: string,
+  url: string
 }
 
 const skills: Skill[] = [
@@ -20,43 +21,50 @@ const skills: Skill[] = [
     name: "HTML",
     icon: "nf-md-language_html5",
     description: "Semantic markup and structure for web pages. I write accessible, standards-compliant HTML that serves as a solid foundation for styling and interactivity.",
-    group: "Markup"
+    group: "Markup",
+    url: "https://developer.mozilla.org/en-US/docs/Web/HTML"
   },
   {
     name: "CSS",
     icon: "nf-dev-css3",
     description: "Styling, layout and responsive design. I work with flexbox, grid, custom properties and modern CSS features to build fluid interfaces that adapt to any screen size.",
-    group: "Markup"
+    group: "Markup",
+    url: "https://developer.mozilla.org/en-US/docs/Web/CSS"
   },
   {
     name: "JavaScript",
     icon: "nf-md-language_javascript",
     description: "Client-side interactivity and logic. I use modern ES features, DOM APIs and browser capabilities to build dynamic, responsive user experiences.",
-    group: "Language"
+    group: "Language",
+    url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
   },
   {
     name: "TypeScript",
     icon: "nf-dev-typescript",
     description: "Typed JavaScript for safer, scalable code. I leverage strict typing, generics and inference to catch errors at compile time and improve long-term maintainability.",
-    group: "Language"
+    group: "Language",
+    url: "https://www.typescriptlang.org/docs/"
   },
   {
     name: "Vue",
     icon: "nf-md-vuejs",
     description: "Component-based UI framework. I build reusable, reactive components with composables, slots and scoped styles to create maintainable and expressive interfaces.",
-    group: "Framework"
+    group: "Framework",
+    url: "https://vuejs.org/"
   },
   {
     name: "Nuxt",
     icon: "nf-md-nuxt",
     description: "Vue meta-framework for SSR and tooling. I use Nuxt for server-side rendering, file-based routing, auto-imports and a streamlined developer experience out of the box.",
-    group: "Framework"
+    group: "Framework",
+    url: "https://nuxt.com/docs"
   },
   {
     name: "Vercel",
     icon: "nf-dev-vercel",
     description: "Deployment and hosting platform. I deploy projects with continuous integration, edge functions and preview deployments for fast, reliable and globally distributed delivery.",
-    group: "Service"
+    group: "Service",
+    url: "https://vercel.com/docs"
   }
 ]
 
@@ -101,7 +109,8 @@ const adaptive = computed<Adaptive>(() => {
 </script>
 
 <template>
-  <Section>
+  <!-- Приветствие -->
+  <Section anchor="hello">
     <template #heading>
       <Icon name="nf-md-hand_wave" />Hello
     </template>
@@ -127,17 +136,29 @@ const adaptive = computed<Adaptive>(() => {
       </Flex>
     </Flex>
   </Section>
-  <Section>
+
+  <!-- Скиллы -->
+  <Section anchor="skills">
     <template #heading><Icon name="nf-fa-toolbox" />Skills</template>
     <Masonry mode="vertical" :columns="adaptive.skill_columns" :gap="32">
       <Flex
         v-for="skill in skills"
+        tag="a"
+        :href="skill.url"
+        target="_blank"
+        rel="noopener noreferrer"
         direction="column"
         :gap="12"
         :padding="16"
         :radius="6"
         :css="{
-          border: `${get_rem(2)} solid ${TOKENS.colors.gray[8]}`
+          border: `${get_rem(2)} solid ${TOKENS.colors.gray[8]}`,
+          hover: {
+            borderColor: TOKENS.colors.accent[2]
+          },
+
+          cursor: 'pointer',
+          transition: 'border-color .333s ease-out'
         }"
       >
         <Text family="heading" size="default">
