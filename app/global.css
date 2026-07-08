@@ -9,9 +9,11 @@
   all: unset;
   color: inherit;
   font: inherit;
+  box-sizing: border-box;
 }
 
-script, style {
+script,
+style {
   display: none;
 }
 
