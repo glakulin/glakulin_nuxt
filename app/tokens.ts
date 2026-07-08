@@ -36,6 +36,7 @@ type Tokens = {
   colors: Colors;
   typography: Typography;
   size: Sizes;
+  transition: string;
 }
 
 
@@ -167,5 +168,6 @@ export const TOKENS: Tokens = {
       lg: 128,
       xl: 256
     }
-  }
+  },
+  transition: ".333s ease-out"
 } as const satisfies Tokens;
