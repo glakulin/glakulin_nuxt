@@ -17,15 +17,16 @@ const screen_padding = computed(() => {
 const css_rule_container = computed<Css_Rule>(() => ({
   position: "fixed",
   width: "100%",
-  marginTop: get_rem(12)
+  marginTop: get_rem(12),
+  zIndex: 999
 }));
 
 // Стили хэдера
 const css_rule = computed<Css_Rule>(() => ({
   width: "100%",
-  backgroundColor: `${get_color("gray_9")}80`,
+  backgroundColor: `${get_color("gray_9")}d0`,
   border: `${get_rem(1)} solid ${get_color("gray_8")}`,
-  backdropFilter: "blur(5px)"
+  backdropFilter: "blur(4px)"
 }));
 
 // Текущая страница
