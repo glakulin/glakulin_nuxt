@@ -35,7 +35,7 @@ const route = useRoute();
 
 <template>
   <Flex tag="header" :css="css_rule_container" justify_content="center" :padding="[0, screen_padding]">
-    <Flex :css="css_rule" :radius="8" :padding="12" justify_content="space-between" align_items="center">
+    <Flex :css="css_rule" :padding="12" justify_content="space-between" align_items="center">
       <Text family="body" size="sm"><svg :style="{aspectRatio: '97 / 24', height: '1em'}"><use href="/logo_full.svg"></use></svg></Text>
       <Text family="body" size="sm" color="gray_8">{{ route.name }}</Text>
     </Flex>
