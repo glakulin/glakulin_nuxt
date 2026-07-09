@@ -22,6 +22,7 @@ const css_rule = computed<Css_Rule>(() => {
   return {
     color: base_color,
     transition: `color ${TOKENS.transition}`,
+    cursor: "pointer",
     hover: {
       color: hover_color
     },
