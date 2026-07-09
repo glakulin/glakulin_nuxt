@@ -19,7 +19,7 @@ const screen_padding = computed(() => {
 const css_rule_container = computed<Css_Rule>(() => ({
   position: "fixed",
   width: "100%",
-  marginTop: get_rem(12),
+  top: 12,
   zIndex: 999
 }));
 
