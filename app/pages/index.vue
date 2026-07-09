@@ -216,7 +216,7 @@ const adaptive = computed<Adaptive>(() => {
     </template>
     <Masonry mode="vertical" :columns="adaptive.skill_columns" :gap="32">
       <Flex v-for="skill in skills" tag="a" :href="skill.url" target="_blank" rel="noopener noreferrer"
-        direction="column" :gap="12" :padding="16" :radius="6" :css="{
+        direction="column" :gap="12" :padding="16" :css="{
           '--color-icon': get_color('gray_8'),
           position: 'relative',
           overflow: 'hidden',
@@ -255,7 +255,7 @@ const adaptive = computed<Adaptive>(() => {
       <Text family="heading" size="md">Software</Text>
       <Masonry mode="vertical" :columns="adaptive.skill_columns" :gap="32">
         <Flex v-for="skill in software" tag="a" :href="skill.url" target="_blank" rel="noopener noreferrer"
-          direction="column" :gap="12" :padding="16" :radius="6" :css="{
+          direction="column" :gap="12" :padding="16" :css="{
             position: 'relative',
             overflow: 'hidden',
             border: `${get_rem(2)} solid ${get_color('gray_8')}`,
@@ -280,7 +280,7 @@ const adaptive = computed<Adaptive>(() => {
     <Flex direction="column" :gap="40">
       <Text family="heading" size="md">Hardware</Text>
       <Flex direction="column" :gap="32">
-        <Flex v-for="group in hardware_groups" :key="group.title" direction="column" :gap="14">
+        <Flex v-for="group in hardware_groups" :key="group.title" direction="column" :gap="16">
           <Flex :gap="12" align_items="flex-end">
             <Text family="heading" size="default">
               <Flex :gap="12">
@@ -295,7 +295,7 @@ const adaptive = computed<Adaptive>(() => {
           </Flex>
 
           <Flex :gap="10" :css="{ flexWrap: 'wrap' }">
-            <Flex v-for="item in group.items" :key="item" tag="div" :padding="10" :radius="20" :css="{
+            <Flex v-for="item in group.items" :key="item" tag="div" :padding="8" :css="{
               background: get_color('gray_9'),
               border: `${get_rem(1)} solid ${get_color('gray_8')}`
             }">

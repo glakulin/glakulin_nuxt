@@ -204,6 +204,48 @@ A component for creating grid containers.
 
 ---
 
+### Link
+
+A component for creating links using Nuxt's `NuxtLink` with design token support for colors and hover states.
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `to` | `string` | — | Link path (passed to `NuxtLink`) |
+| `color` | `Color_Scheme` | — | Link color (format: `name_shade`) |
+| `color_hover` | `Color_Scheme` | — | Link color on hover |
+| `css` | `Css_Rule` | — | Additional CSS styles (merges with base styles) |
+
+**Usage Examples:**
+
+```vue
+<!-- Basic link -->
+<Link to="/about">About</Link>
+
+<!-- Colored link with hover -->
+<Link to="/projects" color="accent_5" color_hover="accent_7">
+  Projects
+</Link>
+
+<!-- Link with custom styles -->
+<Link
+  to="/contact"
+  color="gray_8"
+  color_hover="accent_5"
+  :css="{fontWeight: 600, textDecoration: 'underline'}"
+>
+  Contact
+</Link>
+
+<!-- Link inside text -->
+<Text family="body" size="md">
+  Check out my <Link to="/blog" color="info_5" color_hover="info_7">blog</Link> for updates.
+</Text>
+```
+
+---
+
 ### Icon
 
 A component for rendering icons from [Nerd Fonts](https://www.nerdfonts.com/).
