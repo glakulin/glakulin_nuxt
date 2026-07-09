@@ -41,7 +41,7 @@ const css_rule_wrapper = computed<Css_Rule>(() => ({
     </Text>
 
     <!-- Ссылка на главную -->
-    <Link href="/" color="gray_2" color_hover="gray_1" @click.prevent="handle_home">
+    <Link href="/" color="gray_1" color_hover="gray_3" @click.prevent="handle_home">
       <Text family="body" size="sm">
         <Flex :gap="6"><Icon name="nf-md-home" />На главную</Flex>
       </Text>
