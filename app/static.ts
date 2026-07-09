@@ -9,7 +9,8 @@ type Link = {
 
 // Список страниц
 export const PAGES: Link[] = [
-  { label: "Home", href: "/", icon: "nf-md-home" }
+  { label: "home", href: "/", icon: "nf-md-home" },
+  { label: "links", href: "/links", icon: "nf-fa-link" }
 ];
 
 // Список соцсетей

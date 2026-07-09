@@ -2,10 +2,10 @@
 
 <script setup lang="ts">
 import { type Css_Rule } from "~/composables/use_css";
-import { Flex, Icon, Link, Text } from "../atoms";
+import { Flex, Icon, Text } from "../atoms";
 import { TOKENS } from "~/tokens";
 import { get_color, get_rem } from "~/utilities";
-import { HeaderMenu } from ".";
+import { HeaderMenu, Link } from ".";
 import { PAGES } from "~/static";
 
 // Адаптив
