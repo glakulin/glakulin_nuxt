@@ -102,26 +102,10 @@ const get_rule = (class_name: string, media: string, selector: string, property:
   return media ? `${media}{${rule}}` : rule;
 };
 
-// Флаг однократной вставки head
-let head_injected = false;
-
 // Css-in-js
 export const use_css = () => {
   const rules = useState<Record<string, string>>("use_css_rules", () => ({}));
   const css_text = useState("use_css_text", () => "");
-
-  if (!head_injected) {
-    head_injected = true;
-
-    useHead({
-      style: [
-        {
-          id: STYLE_ID,
-          textContent: css_text
-        }
-      ]
-    });
-  }
 
   // Вставка атомарного правила
   const insert_css_rule = (class_names: string[], media: string, selector: string, property: string, value: string): void => {
@@ -172,10 +156,31 @@ export const use_css = () => {
     }
   };
 
+  // Синхронизация стилей с DOM. Элемент <style> создаётся и обновляется
+  // напрямую, вне жизненного цикла компонентов, поэтому он не удаляется
+  // при SPA-навигации и стили сохраняются между страницами.
+  const sync_dom = (): void => {
+    if (!import.meta.client) return;
+
+    let style_el = document.getElementById(STYLE_ID) as HTMLStyleElement | null;
+
+    if (!style_el) {
+      style_el = document.createElement("style");
+      style_el.id = STYLE_ID;
+      document.head.appendChild(style_el);
+    }
+
+    style_el.textContent = css_text.value;
+  };
+
   return (css_rule: Css_Rule): string => {
     const class_names: string[] = [];
     
     insert_css_rules(class_names, css_rule);
+
+    // Синхронизируем стили с DOM после вставки всех правил компонента
+    // (актуально при SPA-навигации между страницами)
+    sync_dom();
 
     return class_names.join(" ");
   };
