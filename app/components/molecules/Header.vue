@@ -2,10 +2,10 @@
 
 <script setup lang="ts">
 import { type Css_Rule } from "~/composables/use_css";
-import { Flex, Icon, Link, Text } from "../atoms";
+import { Flex, Icon, Text } from "../atoms";
 import { TOKENS } from "~/tokens";
 import { get_color, get_rem } from "~/utilities";
-import { HeaderMenu } from ".";
+import { HeaderMenu, Link } from ".";
 import { PAGES } from "~/static";
 
 // Адаптив
@@ -19,7 +19,7 @@ const screen_padding = computed(() => {
 const css_rule_container = computed<Css_Rule>(() => ({
   position: "fixed",
   width: "100%",
-  marginTop: get_rem(12),
+  top: 12,
   zIndex: 999
 }));
 

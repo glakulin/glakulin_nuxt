@@ -1,7 +1,7 @@
 <!-- Главная страница -->
 
 <script setup lang="ts">
-import { Flex, Grid, Icon, Text } from '~/components/atoms';
+import { Flex, Icon, Text } from '~/components/atoms';
 import { Section } from '~/components/molecules';
 import Masonry from '~/components/molecules/Masonry.vue';
 import { group_icons, HARDWARE, SKILLS, SOFTWARE } from '~/static';

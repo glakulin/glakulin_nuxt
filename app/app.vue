@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import "~/global.css";
 import { Flex } from "./components/atoms";
-import { Header } from "./components/molecules";
+import { Header, Footer } from "./components/molecules";
 import { TOKENS } from "./tokens";
 
 // Адаптивные отступы
@@ -17,9 +17,10 @@ const screen_padding = computed(() => {
     <NuxtRouteAnnouncer />
     <Header />
     <Flex
-      tag="main" direction="column" :gap="64" :padding="[96, screen_padding]"
+      tag="main" direction="column" :gap="64" :padding="[96, screen_padding, 12, screen_padding]"
     >
       <NuxtPage />
+      <Footer />
     </Flex>
   </div>
 </template>
