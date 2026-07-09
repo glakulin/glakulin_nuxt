@@ -46,9 +46,7 @@ const is_menu_open = ref<boolean>(false);
     <Flex :css="css_rule" :padding="12" justify_content="space-between" align_items="center">
       <Text family="body" size="sm"><svg :style="{aspectRatio: '97 / 24', height: '1em'}"><use href="/logo_full.svg"></use></svg></Text>
       <Text family="body" size="sm" color="gray_8"><Flex :gap="4"><Icon :name="current_page?.icon" />{{ current_page?.label }}</Flex></Text>
-      <Flex tag="button" @click="is_menu_open = !is_menu_open">
-        <Text family="body" size="sm"><Link color="gray_1" color_hover="gray_3"><Icon :name="is_menu_open ? 'nf-md-close' : 'nf-md-menu'" /></Link></Text>
-      </Flex>
+      <Text tag="button" @click="is_menu_open = !is_menu_open" family="body" size="sm"><Link color="gray_1" color_hover="gray_3"><Icon :name="is_menu_open ? 'nf-md-close' : 'nf-md-menu'" /></Link></Text>
     </Flex>
   </Flex>
   <HeaderMenu :is_open="is_menu_open" />
