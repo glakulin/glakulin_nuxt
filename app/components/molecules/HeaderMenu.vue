@@ -42,7 +42,7 @@ const css_rule = computed<Css_Rule>(() => ({
 
 <template>
   <Flex tag="nav" :css="css_rule_wrapper" justify_content="center" :padding="[0, screen_padding]">
-    <Flex :css="css_rule" :padding="12" justify_content="space-between" align_items="center">
+    <Flex :css="css_rule" :padding="12" justify_content="space-between">
       <!-- Соцсети (слева) -->
       <Flex :gap="8" direction="column">
         <Link v-for="social in SOCIALS" :key="social.label" :to="social.href" color="gray_1" color_hover="gray_3">
