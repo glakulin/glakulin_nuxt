@@ -2,9 +2,11 @@
 
 <script setup lang="ts">
 import { type Css_Rule } from "~/composables/use_css";
-import { Flex, Text } from "../atoms";
+import { Flex, Icon, Link, Text } from "../atoms";
 import { TOKENS } from "~/tokens";
 import { get_color, get_rem } from "~/utilities";
+import { HeaderMenu } from ".";
+import { PAGES } from "~/static";
 
 // Адаптив
 const { size } = use_window_size();
@@ -31,13 +33,21 @@ const css_rule = computed<Css_Rule>(() => ({
 
 // Текущая страница
 const route = useRoute();
+const current_page = computed(() => 
+  PAGES.find(page => page.href === route.path)
+);
+
+// Состояние меню
+const is_menu_open = ref<boolean>(false);
 </script>
 
 <template>
   <Flex tag="header" :css="css_rule_container" justify_content="center" :padding="[0, screen_padding]">
     <Flex :css="css_rule" :padding="12" justify_content="space-between" align_items="center">
       <Text family="body" size="sm"><svg :style="{aspectRatio: '97 / 24', height: '1em'}"><use href="/logo_full.svg"></use></svg></Text>
-      <Text family="body" size="sm" color="gray_8">{{ route.name }}</Text>
+      <Text family="body" size="sm" color="gray_8"><Flex :gap="4"><Icon :name="current_page?.icon" />{{ current_page?.label }}</Flex></Text>
+      <Text tag="button" @click="is_menu_open = !is_menu_open" family="body" size="sm"><Link color="gray_1" color_hover="gray_3"><Icon :name="is_menu_open ? 'nf-md-close' : 'nf-md-menu'" /></Link></Text>
     </Flex>
   </Flex>
+  <HeaderMenu :is_open="is_menu_open" />
 </template>
