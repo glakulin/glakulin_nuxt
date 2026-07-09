@@ -16,15 +16,14 @@ const props = defineProps<{
 
 // Свойства в стили
 const css_rule = computed<Css_Rule>(() => {
-  const baseColor = props.color ? get_color(props.color) : "inherit";
-  const hoverColor = props.color_hover ? get_color(props.color_hover) : "inherit";
+  const base_color = props.color ? get_color(props.color) : "inherit";
+  const hover_color = props.color_hover ? get_color(props.color_hover) : "inherit";
 
   return {
-    color: baseColor,
-    textDecoration: "none",
+    color: base_color,
     transition: `color ${TOKENS.transition}`,
     hover: {
-      color: hoverColor
+      color: hover_color
     },
     ...props.css
   };
