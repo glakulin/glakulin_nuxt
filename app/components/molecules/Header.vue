@@ -33,7 +33,9 @@ const css_rule = computed<Css_Rule>(() => ({
 
 // Текущая страница
 const route = useRoute();
-const current_page = PAGES.find(page => page.href === route.fullPath)
+const current_page = computed(() => 
+  PAGES.find(page => page.href === route.path)
+);
 
 // Состояние меню
 const is_menu_open = ref<boolean>(false);
