@@ -1,15 +1,14 @@
 <!-- Компонент для текстовых блоков -->
 
 <script setup lang="ts">
-import type { Component } from "vue";
 import { TOKENS, type Color_Scheme, type Size } from "~/tokens";
-import { get_color } from "~/utilities";
+import { get_color, type Tag } from "~/utilities";
 import { Style } from "./";
 import { type Css_Rule } from "~/composables/use_css";
 
 // Свойства
 const props = defineProps<{
-  tag?: keyof HTMLElementTagNameMap | Component; // Тег или компонент
+  tag?: Tag; // Тег или компонент
   
   family?: "heading" | "body"; // Шрифт
   size?: Size; // Размер

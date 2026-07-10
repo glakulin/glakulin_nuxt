@@ -1,14 +1,14 @@
 <!-- Компонент для gridbox -->
 
 <script setup lang="ts">
-import type { Component, CSSProperties as CSSP } from "vue";
-import { type Number_Rem } from "~/utilities";
+import type { CSSProperties as CSSP } from "vue";
+import { type Number_Rem, type Tag } from "~/utilities";
 import { Style } from "./";
 import { type Css_Rule } from "~/composables/use_css";
 
 // Свойства
 const props = defineProps<{
-  tag?: keyof HTMLElementTagNameMap | Component; // Тег или компонент
+  tag?: Tag; // Тег или компонент
 
   inline?: boolean; // inline или нет
   template_columns?: CSSP["gridTemplateColumns"]; // Колонки
