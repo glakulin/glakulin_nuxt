@@ -1,13 +1,15 @@
 <!-- Компонент для flexbox -->
 
 <script setup lang="ts">
-import type { CSSProperties as CSSP } from "vue";
+import type { Component, CSSProperties as CSSP } from "vue";
 import { type Number_Rem } from "~/utilities";
 import { Style } from "./";
 import { type Css_Rule } from "~/composables/use_css";
 
 // Свойства
 const props = defineProps<{
+  tag?: keyof HTMLElementTagNameMap | Component; // Тег или компонент
+  
   inline?: boolean; // inline или нет
   direction?: CSSP["flexDirection"]; // Направление
   wrap?: CSSP["flexWrap"]; // Перенос
@@ -43,7 +45,7 @@ const css_rule = computed<Css_Rule>(() => ({
 </script>
 
 <template>
-  <Style :css="css_rule" v-bind="$attrs">
+  <Style :tag="props.tag" :css="css_rule" v-bind="$attrs">
     <slot />
   </Style>
 </template>
