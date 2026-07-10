@@ -2,11 +2,12 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { type Tag } from "~/utilities";
 
 // Свойства
 const props = withDefaults(defineProps<{
   css?: Css_Rule; // Объект со стилями
-  tag?: keyof HTMLElementTagNameMap; // Тег
+  tag?: Tag; // Тег или компонент
 }>(),{
   // Значения по умолчанию
   tag: "div",

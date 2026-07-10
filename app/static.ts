@@ -18,7 +18,8 @@ export const SOCIALS: Link[] = [
   { label: "Telegram", href: "https://t.me/glakulin", icon: "nf-fa-telegram" },
   { label: "YouTube", href: "https://www.youtube.com/@glakulin", icon: "nf-md-youtube" },
   { label: "Twitch", href: "https://www.twitch.tv/glakulin", icon: "nf-md-twitch" },
-  { label: "GitHub", href: "https://github.com/glakulin", icon: "nf-md-github" }
+  { label: "GitHub", href: "https://github.com/glakulin", icon: "nf-md-github" },
+  { label: "Email", href: "mailto:danielglakulin@gmail.com", icon: "nf-md-at" }
 ];
 
 // Карточки
@@ -27,7 +28,8 @@ type Card = {
   icon: string,
   description: string,
   group?: string,
-  url: string
+  url: string,
+  thumbnail?: string
 };
 
 // Иконки категорий
@@ -123,22 +125,16 @@ type Hardware_Group = {
 
 export const HARDWARE: Hardware_Group[] = [
   {
-    title: "Base",
+    title: "PC",
     icon: "nf-oct-cpu",
     items: [
       "ASUS P8H77-M LE",
       "Intel Core i5-3470",
       "Samsung DDR3 1600MHz 8GB(4+4)",
-      "KFA2 GeForce GTX 1650 X Black"
-    ]
-  },
-  {
-    title: "Storage",
-    icon: "nf-md-harddisk",
-    items: [
+      "KFA2 GeForce GTX 1650 X Black",
       "HDD 250GB",
       "HDD 80GB",
-      "USB 32GB x2"
+      "CoolerMaster 600W"
     ]
   },
   {
@@ -147,7 +143,22 @@ export const HARDWARE: Hardware_Group[] = [
     items: [
       "Screens — (1920x1080)*2",
       "Microphone — Fifine Ampligame A6V",
-      "Webcamera — Fifine K420"
+      "Webcamera — Fifine K420",
+      "Mouse — NERPA",
+      "Keyboard — defender",
+      "USB 32GB x2"
     ]
+  }
+]
+
+// Проекты
+export const PROJECTS: Card[] = [
+  {
+    name: "glakulin_nuxt",
+    icon: "nf-md-nuxt",
+    description: "Personal portfolio website built with Nuxt 4 and Vue 3. Custom CSS-in-JS atoms, minimalist flat design, responsive layout and a masonry-based skills grid.",
+    group: "Web",
+    url: "https://github.com/glakulin/glakulin_nuxt",
+    thumbnail: "/projects/glakulin_nuxt.png"
   }
 ]

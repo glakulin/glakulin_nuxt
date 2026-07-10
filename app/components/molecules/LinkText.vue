@@ -2,8 +2,8 @@
 
 <script setup lang="ts">
 import { TOKENS, type Color_Scheme } from "~/tokens";
-import { get_color } from "~/utilities";
-import { Flex, Icon, Text } from "../atoms";
+import { get_color, get_rem } from "~/utilities";
+import { Flex, Icon } from "../atoms";
 import { type Css_Rule } from "~/composables/use_css";
 
 // Свойства
@@ -48,7 +48,7 @@ const css_rule = computed<Css_Rule>(() => {
   >
     <Flex inline align_items="center" :gap="4" :css="css_rule" v-bind="$attrs">
       <slot />
-      <Text v-if="is_external" family="body" size="default"><Icon name="nf-fa-external_link" /></Text>
+      <Icon v-if="is_external" :css="{ fontSize: get_rem(8) }" name="nf-fa-external_link" />
     </Flex>
   </NuxtLink>
 </template>

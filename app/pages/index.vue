@@ -2,19 +2,20 @@
 
 <script setup lang="ts">
 import { Flex, Icon, Text } from '~/components/atoms';
-import { Section } from '~/components/molecules';
+import { CardSkill, Section } from '~/components/molecules';
 import Masonry from '~/components/molecules/Masonry.vue';
-import { group_icons, HARDWARE, SKILLS, SOFTWARE } from '~/static';
-import { TOKENS } from '~/tokens';
+import { HARDWARE, PROJECTS, SKILLS, SOFTWARE } from '~/static';
 import { get_color, get_rem } from '~/utilities';
 
 // Адаптив
 const { size } = use_window_size();
 type Adaptive = {
   skill_columns: number
+  project_columns: number
 };
 const adaptive = computed<Adaptive>(() => {
   let skill_columns: number;
+  let project_columns: number;
 
   switch (size.value) {
     case "xl":
@@ -41,8 +42,12 @@ const adaptive = computed<Adaptive>(() => {
       skill_columns = 1;
   }
 
+  // Проекты: >=md — 2 колонки, меньше — 1
+  project_columns = ["md", "lg", "xl"].includes(size.value) ? 2 : 1;
+
   return {
-    skill_columns
+    skill_columns,
+    project_columns
   }
 });
 </script>
@@ -84,64 +89,18 @@ const adaptive = computed<Adaptive>(() => {
       <Icon name="nf-fa-toolbox" />Skills
     </template>
     <Masonry mode="vertical" :columns="adaptive.skill_columns" :gap="32">
-      <Flex v-for="skill in SKILLS" tag="a" :href="skill.url" target="_blank" rel="noopener noreferrer"
-        direction="column" :gap="12" :padding="16" :css="{
-          '--color-icon': get_color('gray_8'),
-          position: 'relative',
-          overflow: 'hidden',
-          border: `${get_rem(2)} solid ${get_color('gray_8')}`,
-          hover: {
-            '--color-icon': get_color('accent_2'),
-            borderColor: get_color('accent_2')
-          },
-
-          cursor: 'pointer',
-          transition: `border-color ${TOKENS.transition}`
-        }">
-        <Text family="heading" size="default">
-          <Flex :gap="8">
-            <Icon :name="skill.icon" />{{ skill.name }}
-          </Flex>
-        </Text>
-        <Text family="body" size="xs">{{ skill.description }}</Text>
-        <Text family="body" size="default" :css="{color: 'var(--color-icon)', transition: `color ${TOKENS.transition}`}">{{ skill.group }}</Text>
-        <Icon :name="group_icons[skill.group!]" :css="{
-          position: 'absolute',
-          right: 16,
-          top: 16,
-          fontSize: 64,
-          color: 'var(--color-icon)',
-          pointerEvents: 'none',
-          filter: 'blur(2px)',
-          zIndex: -1,
-          transition: `color ${TOKENS.transition}`
-        }" />
-      </Flex>
+      <CardSkill v-for="skill in SKILLS" :key="skill.name"
+        :name="skill.name" :icon="skill.icon" :description="skill.description"
+        :group="skill.group" :url="skill.url" />
     </Masonry>
 
     <!-- Софт -->
     <Flex direction="column" :gap="40">
       <Text family="heading" size="md">Software</Text>
       <Masonry mode="vertical" :columns="adaptive.skill_columns" :gap="32">
-        <Flex v-for="skill in SOFTWARE" tag="a" :href="skill.url" target="_blank" rel="noopener noreferrer"
-          direction="column" :gap="12" :padding="16" :css="{
-            position: 'relative',
-            overflow: 'hidden',
-            border: `${get_rem(2)} solid ${get_color('gray_8')}`,
-            hover: {
-              borderColor: get_color('accent_2')
-            },
-
-            cursor: 'pointer',
-            transition: `border-color ${TOKENS.transition}`
-          }">
-          <Text family="heading" size="default">
-            <Flex :gap="8">
-              <Icon :name="skill.icon" />{{ skill.name }}
-            </Flex>
-          </Text>
-          <Text family="body" size="xs">{{ skill.description }}</Text>
-        </Flex>
+        <CardSkill v-for="skill in SOFTWARE" :key="skill.name"
+          :name="skill.name" :icon="skill.icon" :description="skill.description"
+          :url="skill.url" />
       </Masonry>
     </Flex>
 
@@ -174,5 +133,17 @@ const adaptive = computed<Adaptive>(() => {
         </Flex>
       </Flex>
     </Flex>
+  </Section>
+
+  <!-- Проекты -->
+  <Section anchor="projects">
+    <template #heading>
+      <Icon name="nf-md-folder_multiple" />Projects
+    </template>
+    <Masonry mode="vertical" :columns="adaptive.project_columns" :gap="32">
+      <CardSkill v-for="project in PROJECTS" :key="project.name"
+        :name="project.name" :icon="project.icon" :description="project.description"
+        :group="project.group" :url="project.url" :thumbnail="project.thumbnail" />
+    </Masonry>
   </Section>
 </template>

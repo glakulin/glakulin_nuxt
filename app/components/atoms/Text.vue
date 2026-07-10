@@ -2,12 +2,14 @@
 
 <script setup lang="ts">
 import { TOKENS, type Color_Scheme, type Size } from "~/tokens";
-import { get_color } from "~/utilities";
+import { get_color, type Tag } from "~/utilities";
 import { Style } from "./";
 import { type Css_Rule } from "~/composables/use_css";
 
 // Свойства
 const props = defineProps<{
+  tag?: Tag; // Тег или компонент
+  
   family?: "heading" | "body"; // Шрифт
   size?: Size; // Размер
   mono?: boolean; // Моноширинный или нет
@@ -33,7 +35,7 @@ const css_rule = computed<Css_Rule>(() => {
 </script>
 
 <template>
-  <Style :css="css_rule" v-bind="$attrs">
+  <Style :tag="props.tag" :css="css_rule" v-bind="$attrs">
     <slot />
   </Style>
 </template>
