@@ -1,774 +1,234 @@
 # Glakulin
 
-Personal website built with Nuxt 3.
+Personal website built with **Nuxt 4** using **Atomic Design** and **CSS-in-JS**.
 
-## Component Architecture
+## Architecture
 
-The project uses an **Atomic Design** approach with **CSS-in-JS** styling via the `Style.vue` component and `use_css()` composable. Components are divided into two levels:
+The project is built on **Atomic Design** with a custom **CSS-in-JS** system via the `Style` component and `use_css()` composable. All components are auto-imported thanks to Nuxt.
 
-- **Atoms** — basic, reusable components (Flex, Grid, Text, Icon, Style).
-- **Molecules** — composite components built from atoms (Section, Masonry).
-
-Components are automatically imported thanks to Nuxt auto-imports.
-
-### Styling System
-
-All components support the **`css` prop** for inline CSS customization. The `css` prop accepts a `Css_Rule` object that merges with the component's base styles:
-
-```vue
-<!-- Add custom styles to any component -->
-<Flex direction="row" :gap="16" :css="{color: 'red', textAlign: 'center'}">
-  Content
-</Flex>
-
-<!-- Styles merge with base styles -->
-<Grid template_columns="1fr 1fr" :css="{minHeight: '100vh'}">
-  <!-- Grid grid styles + custom minHeight -->
-</Grid>
-```
-
----
-
-## Atoms
-
-### Style
-
-The base component for applying CSS-in-JS styles to any HTML element.
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `tag` | `keyof HTMLElementTagNameMap` | `"div"` | HTML tag to render |
-| `css` | `Css_Rule` | — | CSS rules object (supports pseudo-classes, @media queries) |
-
-**Usage Examples:**
-
-```vue
-<!-- Basic styled div -->
-<Style :css="{display: 'flex', gap: 16}">
-  Content
-</Style>
-
-<!-- With pseudo-classes -->
-<Style
-  tag="button"
-  :css="{
-    padding: 12,
-    backgroundColor: 'blue',
-    hover: { backgroundColor: 'darkblue' },
-    active: { transform: 'scale(0.95)' }
-  }"
->
-  Click me
-</Style>
-
-<!-- With media queries -->
-<Style
-  :css="{
-    fontSize: 16,
-    '@media (max-width: 768px)': { fontSize: 14 }
-  }"
->
-  Responsive text
-</Style>
-```
-
----
-
-### Flex
-
-A component for creating flexbox containers.
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `inline` | `boolean` | `false` | Use `inline-flex` instead of `flex` |
-| `direction` | `CSSProperties["flexDirection"]` | — | Flex direction (`row`, `column`, etc.) |
-| `wrap` | `CSSProperties["flexWrap"]` | — | Flex wrapping (`wrap`, `nowrap`) |
-| `justify_items` | `CSSProperties["justifyItems"]` | — | Align items horizontally |
-| `align_items` | `CSSProperties["alignItems"]` | — | Align items vertically |
-| `justify_content` | `CSSProperties["justifyContent"]` | — | Justify content horizontally |
-| `align_content` | `CSSProperties["alignContent"]` | — | Align content vertically |
-| `gap` | `Number_Rem` | — | Gap between items (in px, converted to rem) |
-| `padding` | `Number_Rem` | — | Inner padding (in px) |
-| `radius` | `Number_Rem` | — | Border radius (in px) |
-| `css` | `Css_Rule` | — | Additional CSS styles (merges with base styles) |
-| `tag` | `keyof HTMLElementTagNameMap` | `"div"` | HTML tag (passed via `$attrs`) |
-
-**Usage Examples:**
-
-```vue
-<!-- Simple flex container with column direction and gaps -->
-<Flex direction="column" :gap="16">
-  <div>Item 1</div>
-  <div>Item 2</div>
-</Flex>
-
-<!-- Centering content -->
-<Flex justify_content="center" align_items="center" :padding="24">
-  <span>Centered content</span>
-</Flex>
-
-<!-- Horizontal list with wrapping -->
-<Flex wrap="wrap" :gap="8">
-  <span>Tag 1</span>
-  <span>Tag 2</span>
-  <span>Tag 3</span>
-</Flex>
-
-<!-- Using a different HTML tag -->
-<Flex tag="nav" direction="row" :gap="16">
-  <a href="/">Home</a>
-  <a href="/about">About</a>
-</Flex>
-
-<!-- With custom CSS -->
-<Flex
-  direction="column"
-  :gap="16"
-  :css="{minHeight: '100vh', backgroundColor: 'gray_1'}"
->
-  Full-height column
-</Flex>
-```
-
----
-
-### Grid
-
-A component for creating grid containers.
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `inline` | `boolean` | `false` | Use `inline-grid` instead of `grid` |
-| `template_columns` | `CSSProperties["gridTemplateColumns"]` | — | Column definitions |
-| `template_rows` | `CSSProperties["gridTemplateRows"]` | — | Row definitions |
-| `template_areas` | `CSSProperties["gridTemplateAreas"]` | — | Named grid areas |
-| `auto_flow` | `CSSProperties["gridAutoFlow"]` | — | Auto-placement flow (`row`, `column`) |
-| `auto_columns` | `CSSProperties["gridAutoColumns"]` | — | Auto-column size |
-| `auto_rows` | `CSSProperties["gridAutoRows"]` | — | Auto-row size |
-| `justify_items` | `CSSProperties["justifyItems"]` | — | Align items horizontally |
-| `align_items` | `CSSProperties["alignItems"]` | — | Align items vertically |
-| `justify_content` | `CSSProperties["justifyContent"]` | — | Justify content horizontally |
-| `align_content` | `CSSProperties["alignContent"]` | — | Align content vertically |
-| `gap` | `Number_Rem` | — | Gap between cells (in px) |
-| `padding` | `Number_Rem` | — | Inner padding (in px) |
-| `radius` | `Number_Rem` | — | Border radius (in px) |
-| `css` | `Css_Rule` | — | Additional CSS styles (merges with base styles) |
-| `tag` | `keyof HTMLElementTagNameMap` | `"div"` | HTML tag (passed via `$attrs`) |
-
-**Usage Examples:**
-
-```vue
-<!-- 3-column grid -->
-<Grid template_columns="repeat(3, 1fr)" :gap="16">
-  <div>1</div>
-  <div>2</div>
-  <div>3</div>
-  <div>4</div>
-</Grid>
-
-<!-- Responsive grid -->
-<Grid template_columns="repeat(auto-fill, minmax(200px, 1fr))" :gap="24">
-  <div>Card 1</div>
-  <div>Card 2</div>
-  <div>Card 3</div>
-</Grid>
-
-<!-- Grid with named areas -->
-<Grid
-  template_areas="'header header' 'sidebar main' 'footer footer'"
-  template_columns="200px 1fr"
-  template_rows="auto 1fr auto"
-  :gap="16"
->
-  <div style="grid-area: header">Header</div>
-  <div style="grid-area: sidebar">Sidebar</div>
-  <div style="grid-area: main">Main Content</div>
-  <div style="grid-area: footer">Footer</div>
-</Grid>
-
-<!-- With custom styles -->
-<Grid
-  template_columns="repeat(2, 1fr)"
-  :gap="16"
-  :css="{minHeight: '100%', padding: 32}"
->
-  Cards go here
-</Grid>
-```
-
----
-
-### Link
-
-A component for creating links using Nuxt's `NuxtLink` with design token support for colors and hover states.
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `to` | `string` | — | Link path (passed to `NuxtLink`) |
-| `color` | `Color_Scheme` | — | Link color (format: `name_shade`) |
-| `color_hover` | `Color_Scheme` | — | Link color on hover |
-| `css` | `Css_Rule` | — | Additional CSS styles (merges with base styles) |
-
-**Usage Examples:**
-
-```vue
-<!-- Basic link -->
-<Link to="/about">About</Link>
-
-<!-- Colored link with hover -->
-<Link to="/projects" color="accent_5" color_hover="accent_7">
-  Projects
-</Link>
-
-<!-- Link with custom styles -->
-<Link
-  to="/contact"
-  color="gray_8"
-  color_hover="accent_5"
-  :css="{fontWeight: 600, textDecoration: 'underline'}"
->
-  Contact
-</Link>
-
-<!-- Link inside text -->
-<Text family="body" size="md">
-  Check out my <Link to="/blog" color="info_5" color_hover="info_7">blog</Link> for updates.
-</Text>
-```
-
----
-
-### Icon
-
-A component for rendering icons from [Nerd Fonts](https://www.nerdfonts.com/).
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | — | Icon name (CSS class without the `nf` prefix) |
-| `css` | `Css_Rule` | — | Additional CSS styles (for parent styling) |
-
-**Usage Examples:**
-
-```vue
-<!-- Section icon -->
-<Icon name="nf-md-format_section" />
-
-<!-- GitHub icon -->
-<Icon name="nf-dev-github" />
-
-<!-- Icon inside text -->
-<Text>
-  <Icon name="nf-fa-star" /> Favorites
-</Text>
-
-<!-- Icon with props for parent -->
-<Icon name="nf-md-close" :css="{cursor: 'pointer'}" />
-```
-
-> **Note:** Nerd Fonts must be connected in the project for icons to render correctly.
-
----
-
-### Text
-
-A component for text blocks with design token support.
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `family` | `"heading" \| "body"` | — | Font family |
-| `size` | `Size` | — | Text size (`default`, `xs`, `sm`, `md`, `lg`, `xl`) |
-| `mono` | `boolean` | `false` | Use monospace font |
-| `color` | `Color_Scheme` | — | Text color (format: `name_shade`) |
-| `css` | `Css_Rule` | — | Additional CSS styles (merges with base styles) |
-| `tag` | `keyof HTMLElementTagNameMap` | `"p"` | HTML tag (passed via `$attrs`) |
-
-**Available Sizes:**
-
-| Size | Heading (px) | Body (px) |
-|------|--------------|-----------|
-| `default` | 40 | 12 |
-| `xs` | 44 | 16 |
-| `sm` | 48 | 20 |
-| `md` | 56 | 28 |
-| `lg` | 60 | 32 |
-| `xl` | 64 | 36 |
-
-**Usage Examples:**
-
-```vue
-<!-- Heading -->
-<Text tag="h1" family="heading" size="xl">Page Title</Text>
-
-<!-- Paragraph -->
-<Text family="body" size="md">Regular paragraph text.</Text>
-
-<!-- Monospace text -->
-<Text mono size="sm">const x = 42;</Text>
-
-<!-- Colored text -->
-<Text color="accent_5">Accent text</Text>
-<Text color="error_5">Error text</Text>
-<Text color="success_5">Success message</Text>
-
-<!-- Combined props -->
-<Text tag="h2" family="heading" size="lg" color="gray_8">
-  Secondary heading
-</Text>
-
-<!-- With custom styles -->
-<Text
-  family="body"
-  size="md"
-  :css="{textDecoration: 'underline', fontStyle: 'italic'}"
->
-  Styled text
-</Text>
-```
-
----
-
-## Molecules
-
-### Section
-
-A wrapper component that combines `Flex`, `Text`, and `Icon` to create a styled section.
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `css` | `Css_Rule` | — | Additional CSS styles (passed to root `Flex`) |
-
-**Slots:**
-
-| Slot | Description |
-|------|-------------|
-| `default` | Main section content |
-| `heading` | Custom heading with icon (default: "Section" with icon) |
-
-**Usage Examples:**
-
-```vue
-<!-- Basic section -->
-<Section>
-  <p>Section content goes here</p>
-</Section>
-
-<!-- Custom heading slot -->
-<Section>
-  <template #heading>
-    <Icon name="nf-md-folder" />
-    Projects
-  </template>
-  <div>Project list</div>
-</Section>
-
-<!-- With custom styles -->
-<Section :css="{backgroundColor: 'gray_2', padding: 32}">
-  <p>Styled section</p>
-</Section>
-```
-
----
-
-### Masonry
-
-A component that arranges child elements in a masonry layout, measuring their dimensions and distributing them evenly across columns or rows.
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `mode` | `"vertical" \| "horizontal"` | — | Layout direction (`vertical` = columns, `horizontal` = rows) |
-| `columns` | `number` | `1` | Number of columns (in vertical mode) |
-| `rows` | `number` | `1` | Number of rows (in horizontal mode) |
-| `justify_items` | `CSSProperties["justifyItems"]` | — | Align items horizontally |
-| `align_items` | `CSSProperties["alignItems"]` | — | Align items vertically |
-| `gap` | `Number_Rem` | — | Gap between items (in px) |
-| `padding` | `Number_Rem` | — | Inner padding (in px) |
-| `radius` | `Number_Rem` | — | Border radius (in px) |
-| `css` | `Css_Rule` | — | Additional CSS styles (merges with base styles) |
-| `tag` | `keyof HTMLElementTagNameMap` | `"div"` | HTML tag (passed via `$attrs`) |
-
-**How it Works:**
-
-1. Measures the height/width of each child element
-2. Distributes children evenly across columns/rows to minimize height/width differences
-3. Re-calculates on size changes and prop updates
-
-**Usage Examples:**
-
-```vue
-<!-- Vertical masonry layout (3 columns) -->
-<Masonry mode="vertical" :columns="3" :gap="16">
-  <div>Item 1</div>
-  <div>Item 2 (taller)</div>
-  <div>Item 3</div>
-  <div>Item 4</div>
-  <div>Item 5</div>
-  <div>Item 6</div>
-</Masonry>
-
-<!-- Horizontal masonry layout (2 rows) -->
-<Masonry mode="horizontal" :rows="2" :gap="24">
-  <div>Item 1</div>
-  <div>Item 2</div>
-  <div>Item 3</div>
-  <div>Item 4</div>
-</Masonry>
-
-<!-- With padding and border radius -->
-<Masonry
-  mode="vertical"
-  :columns="4"
-  :gap="16"
-  :padding="32"
-  :radius="8"
->
-  <div>Card 1</div>
-  <div>Card 2</div>
-  <!-- More cards -->
-</Masonry>
-
-<!-- With custom styles -->
-<Masonry
-  mode="vertical"
-  :columns="3"
-  :gap="16"
-  :css="{minHeight: '100vh', backgroundColor: 'gray_1'}"
->
-  <div>Item 1</div>
-  <div>Item 2</div>
-  <!-- More items -->
-</Masonry>
-```
-
----
-
-## Design Tokens
-
-All components use centralized design tokens defined in `app/tokens.ts`. These include:
-
-- **Colors**: Named color schemes with 9 shades each (gray, accent, error, warning, success, info)
-- **Typography**: Heading and body font families with size/weight variations
-- **Sizes**: Screen breakpoints and padding scales
-
-### Using Colors
-
-Colors are referenced using the format `{colorName}_{shade}`:
-
-```vue
-<Text color="accent_5">Accent text</Text>
-<Text color="error_3">Error message</Text>
-```
-
-### Using Sizes
-
-Numeric values in props are automatically converted to `rem` units:
-
-```vue
-<Flex :gap="16" :padding="24" :radius="8">
-  <!-- 16px = 1rem, 24px = 1.5rem, 8px = 0.5rem -->
-</Flex>
-```
-
----
-
-## CSS-in-JS System
-
-The `use_css()` composable provides a lightweight CSS-in-JS solution with:
-
-- **Atomic CSS generation** — unique classes for each style rule
-- **Caching** — rules are cached to avoid duplication
-- **Pseudo-classes** — support for hover, focus, active, etc.
-- **Media queries** — responsive styles with `@media` rules
-- **Nesting** — supports nested pseudo-class and media query objects
-
-Example from `use_css()`:
-
-```typescript
-const styles = css({
-  display: 'flex',
-  gap: 16,
-  hover: {
-    backgroundColor: 'blue'
-  },
-  '@media (max-width: 768px)': {
-    flexDirection: 'column'
-  }
-});
-```
-
----
+Components are divided into two levels:
+- **Atoms** — basic reusable elements (`Style`, `Flex`, `Grid`, `Text`, `Icon`).
+- **Molecules** — composite components built from atoms (`Section`, `Masonry`, `LinkText`).
 
 ## File Structure
 
 ```
 app/
-├── app.vue                 # Application entry point
+├── app.vue                 # Entry point
 ├── global.css              # Global styles
 ├── tokens.ts               # Design tokens
-├── utilities.ts            # Utility functions (color, size, etc.)
+├── utilities.ts            # Utilities (color, size, etc.)
 ├── composables/
-│   ├── use_css.ts         # CSS-in-JS composable
-│   └── use_window_size.ts # Reactive window size tracking
+│   ├── use_css.ts          # CSS-in-JS composable
+│   └── use_window_size.ts  # Reactive window size
 ├── components/
-│   ├── atoms/
-│   │   ├── Style.vue       # Base styling component
-│   │   ├── Flex.vue        # Flexbox container
-│   │   ├── Grid.vue        # Grid container
-│   │   ├── Text.vue        # Text component
-│   │   ├── Icon.vue        # Icon component
-│   │   └── index.ts        # Exports
-│   └── molecules/
-│       ├── Section.vue     # Section wrapper
-│       ├── Masonry.vue     # Masonry layout
-│       └── index.ts        # Exports
+│   ├── atoms/              # Basic components
+│   └── molecules/          # Composite components
 └── pages/
-    └── index.vue           # Index page
-```
-```
-
----
-
-## Molecules
-
-### Section
-
-A component for styling page sections with a heading and an icon.
-
-**Slots:**
-
-| Slot | Description |
-|------|-------------|
-| `default` | Main section content |
-| `heading` | Custom heading (overrides the default) |
-
-**Usage Examples:**
-
-```vue
-<!-- Basic usage -->
-<Section>
-  <p>Section content with the default "Section" heading</p>
-</Section>
-
-<!-- Custom heading -->
-<Section>
-  <template #heading>
-    <Icon name="nf-fa-user" /> About Me
-  </template>
-  <p>Personal information.</p>
-</Section>
-
-<!-- Section with grid content -->
-<Section>
-  <template #heading>
-    <Icon name="nf-dev-github" /> Projects
-  </template>
-  <Grid template_columns="repeat(2, 1fr)" :gap="16">
-    <div>Project 1</div>
-    <div>Project 2</div>
-  </Grid>
-</Section>
+    └── index.vue           # Home page
 ```
 
----
+## Design Tokens (`tokens.ts`)
 
-## Design Tokens
-
-Tokens are defined in the `app/tokens.ts` file and provide centralized management of design decisions.
+Centralized storage for design decisions: colors, typography, sizes, transitions.
 
 ### Colors
+Available palettes: `gray`, `accent`, `error`, `warning`, `success`, `info`. Each contains shades from `1` (light) to `9` (dark). Format: `"name_shade"`, e.g., `"accent_5"`, `"gray_1"`.
 
-The color scheme consists of 6 palettes, each with 9 shades (from light to dark):
-
-| Palette | Description |
-|---------|-------------|
-| `gray` | Neutral gray shades |
-| `accent` | Accent color (purple) |
-| `error` | Error color (red) |
-| `warning` | Warning color (yellow) |
-| `success` | Success color (green) |
-| `info` | Info color (blue) |
-
-**Format:** `name_shade` (e.g., `accent_5`, `gray_1`, `error_3`)
-
-**Examples:**
-- `gray_1` — `#FFFFFF` (white)
-- `gray_9` — `#000000` (black)
-- `accent_5` — `#9500FF` (primary accent)
-- `error_5` — `#FF2200` (error)
+### Screen Sizes
+`default` (390px), `xs` (576px), `sm` (768px), `md` (1024px), `lg` (1440px), `xl` (1920px).
 
 ### Typography
+- **heading** — `IBM Plex Serif` (sizes: `default`, `xs`, `sm`, `md`, `lg`, `xl`)
+- **body** — `IBM Plex Sans` (sizes: `default`, `xs`, `sm`, `md`, `lg`, `xl`)
+- **mono** — `IBM Plex Mono`
 
-| Family | Font | Purpose |
-|--------|------|---------|
-| `heading` | IBM Plex Serif | Headings |
-| `body` | IBM Plex Sans | Main text |
-| `mono` | IBM Plex Mono | Code, monospace text |
+## Utilities (`utilities.ts`)
 
----
+| Function | Description |
+|----------|-------------|
+| `get_rem(value)` | Converts pixels to rem. Accepts `number` or `number[]` for shorthand properties (e.g., `[8, 16]` → `"0.5rem 1rem"`). |
+| `get_color(scheme)` | Returns CSS color from tokens. Format: `"name_shade"`. |
+| `get_size(width)` | Returns current breakpoint (`Size`) by screen width. |
 
-## Utilities
-
-### `get_color(scheme: Color_Scheme): string`
-
-Converts a color scheme token to a CSS color value.
-
-```typescript
-import { get_color } from "~/utilities";
-
-const color = get_color("accent_5"); // "#9500FF"
-```
-
-### `get_rem(value: Number_Rem): string`
-
-Converts a numeric value (in px) to rem.
-
-```typescript
-import { get_rem } from "~/utilities";
-
-const rem = get_rem(16); // "1rem"
-const remArray = get_rem([16, 24]); // "1rem 1.5rem"
-```
-
-### `get_size(width: number): Size`
-
-Returns the current breakpoint name based on a window width. Breakpoints are taken from `TOKENS.size.screen`.
-
-```typescript
-import { get_size } from "~/utilities";
-
-const size = get_size(1024); // "md"
-```
-
-**Breakpoints:**
-
-| Size | Min width (px) |
-|------|----------------|
-| `default` | 390 |
-| `xs` | 576 |
-| `sm` | 768 |
-| `md` | 1024 |
-| `lg` | 1440 |
-| `xl` | 1920 |
+**Types:**
+- `Tag` — HTML tag or Vue component.
+- `Number_Rem` — `number` or `readonly number[]`.
 
 ---
 
-### `use_css()`
+## Components
 
-A composable for CSS-in-JS. Creates atomic CSS classes from style objects.
+### Atoms
 
-```typescript
-const css = use_css();
+#### `Style`
+Base component for applying CSS-in-JS styles.
 
-const className = css({
-  display: "flex",
-  flexDirection: "column",
-  gap: 16, // converted to rem
-  padding: [16, 24], // converted to rem
-  color: get_color("gray_8"),
-  hover: {
-    color: get_color("accent_5")
-  }
-});
-```
-
-**Supported pseudo-classes:**
-- `hover`
-- `focus`
-- `active`
-- `visited`
-- `disabled`
-- `checked`
-- `focusVisible`
-- `focusWithin`
-
----
-
-### `use_window_size()`
-
-A composable for reactively tracking the browser window dimensions and the current breakpoint.
-
-**Returns:**
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `width` | `Ref<number>` | Current window width (`window.innerWidth`) |
-| `height` | `Ref<number>` | Current window height (`window.innerHeight`) |
-| `size` | `ComputedRef<Size>` | Current breakpoint based on `width` (via `get_size`) |
-
-**Usage Examples:**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `tag` | `Tag` | `"div"` | HTML tag or Vue component |
+| `css` | `Css_Rule` | — | Style object |
 
 ```vue
-<script setup lang="ts">
-const { width, height, size } = use_window_size();
-</script>
-
-<template>
-  <Text :size="size">
-    Width: {{ width }}px, breakpoint: {{ size }}
-  </Text>
-</template>
+<Style tag="button" :css="{ color: 'red', hover: { color: 'blue' } }">
+  Button
+</Style>
 ```
 
-```typescript
-// Conditional logic based on breakpoint
-const { size } = use_window_size();
+#### `Flex`
+Container for flexbox layout.
 
-const columns = computed(() =>
-  size.value === "default" ? 1 : size.value === "xl" ? 4 : 2
-);
+| Prop | Type | Description |
+|------|------|-------------|
+| `tag` | `Tag` | HTML tag or component |
+| `inline` | `boolean` | `inline-flex` instead of `flex` |
+| `direction` | `CSSProperties["flexDirection"]` | Axis direction |
+| `wrap` | `CSSProperties["flexWrap"]` | Line wrapping |
+| `justify_items` | `CSSProperties["justifyItems"]` | Horizontal alignment |
+| `align_items` | `CSSProperties["alignItems"]` | Vertical alignment |
+| `justify_content` | `CSSProperties["justifyContent"]` | Horizontal content distribution |
+| `align_content` | `CSSProperties["alignContent"]` | Vertical content distribution |
+| `gap` | `Number_Rem` | Space between elements |
+| `padding` | `Number_Rem` | Inner padding |
+| `radius` | `Number_Rem` | Border radius |
+| `css` | `Css_Rule` | Additional styles |
+
+```vue
+<Flex direction="column" :gap="16" :padding="24">
+  <div>Element 1</div>
+  <div>Element 2</div>
+</Flex>
 ```
 
-> **Note:** On the server (SSR) the values are `0` and `size` is `"default"`. They update on mount during hydration.
+#### `Grid`
+Container for CSS Grid layout.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `tag` | `Tag` | HTML tag or component |
+| `inline` | `boolean` | `inline-grid` instead of `grid` |
+| `template_columns` | `CSSProperties["gridTemplateColumns"]` | Column definition |
+| `template_rows` | `CSSProperties["gridTemplateRows"]` | Row definition |
+| `template_areas` | `CSSProperties["gridTemplateAreas"]` | Named areas |
+| `auto_flow` | `CSSProperties["gridAutoFlow"]` | Auto-fill flow |
+| `auto_columns` | `CSSProperties["gridAutoColumns"]` | Auto-column size |
+| `auto_rows` | `CSSProperties["gridAutoRows"]` | Auto-row size |
+| `justify_items` | `CSSProperties["justifyItems"]` | Horizontal element alignment |
+| `align_items` | `CSSProperties["alignItems"]` | Vertical element alignment |
+| `justify_content` | `CSSProperties["justifyContent"]` | Horizontal content alignment |
+| `align_content` | `CSSProperties["alignContent"]` | Vertical content alignment |
+| `gap` | `Number_Rem` | Gap |
+| `padding` | `Number_Rem` | Inner padding |
+| `radius` | `Number_Rem` | Border radius |
+| `css` | `Css_Rule` | Additional styles |
+
+```vue
+<Grid template_columns="repeat(3, 1fr)" :gap="16">
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
+</Grid>
+```
+
+#### `Text`
+Component for text blocks with design token support.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `tag` | `Tag` | HTML tag or component |
+| `family` | `"heading" \| "body"` | Font family |
+| `size` | `Size` | Size (`default`, `xs`, `sm`, `md`, `lg`, `xl`) |
+| `mono` | `boolean` | Monospace font |
+| `color` | `Color_Scheme` | Color (e.g., `"accent_5"`) |
+| `css` | `Css_Rule` | Additional styles |
+
+```vue
+<Text tag="h1" family="heading" size="xl" color="gray_1">
+  Heading
+</Text>
+<Text family="body" size="sm" mono>
+  Monospace text
+</Text>
+```
+
+#### `Icon`
+Component for icons from Nerd Fonts.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `name` | `string` | Icon name (e.g., `"nf-md-home"`) |
+| `css` | `Css_Rule` | Additional styles |
+
+```vue
+<Icon name="nf-md-github" />
+<Icon name="nf-fa-star" :css="{ color: 'gold', fontSize: '24px' }" />
+```
 
 ---
 
-## Project Structure
+### Molecules
 
-```text
-app/
-├── components/
-│   ├── atoms/          # Basic components
-│   │   ├── Flex.vue
-│   │   ├── Grid.vue
-│   │   ├── Icon.vue
-│   │   ├── Text.vue
-│   │   └── index.ts
-│   └── molecules/      # Composite components
-│       ├── Section.vue
-│       └── index.ts
-├── composables/        # Vue composables
-│   ├── use_css.ts
-│   └── use_window_size.ts
-├── pages/              # App pages
-├── tokens.ts           # Design tokens
-├── utilities.ts        # Utility functions
-└── app.vue
+#### `Section`
+Section wrapper with heading and anchor.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `anchor` | `string` | ID for anchor link |
+| `css` | `Css_Rule` | Additional styles |
+
+**Slots:**
+- `heading` — heading content (default: icon + "Section")
+- `default` — section content
+
+```vue
+<Section anchor="about">
+  <template #heading>
+    <Icon name="nf-md-account" /> About Me
+  </template>
+  <p>Section content...</p>
+</Section>
 ```
 
-## Setup & Running
+#### `Masonry`
+Masonry layout (tile-based).
 
-```bash
-# Install dependencies
-bun install
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mode` | `"vertical" \| "horizontal"` | — | Layout direction |
+| `columns` | `number` | `1` | Number of columns (for `vertical`) |
+| `rows` | `number` | `1` | Number of rows (for `horizontal`) |
+| `justify_items` | `CSSProperties["justifyItems"]` | — | Horizontal alignment |
+| `align_items` | `CSSProperties["alignItems"]` | — | Vertical alignment |
+| `gap` | `Number_Rem` | — | Gap |
+| `padding` | `Number_Rem` | — | Inner padding |
+| `radius` | `Number_Rem` | — | Border radius |
+| `css` | `Css_Rule` | — | Additional styles |
 
-# Start development server
-bun run dev
+```vue
+<Masonry mode="vertical" :columns="3" :gap="16">
+  <div v-for="item in items" :key="item.id">
+    {{ item.content }}
+  </div>
+</Masonry>
+```
 
-# Build for production
-bun run build
+#### `LinkText`
+Text link with color support and automatic external link detection.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `href` | `string` | Link URL |
+| `color` | `Color_Scheme` | Text color |
+| `color_hover` | `Color_Scheme` | Hover color |
+| `css` | `Css_Rule` | Additional styles |
+
+External links automatically open in a new tab with a ↗ icon.
+
+```vue
+<LinkText href="/about" color="gray_1" color_hover="accent_3">
+  About
+</LinkText>
+<LinkText href="https://github.com" color="gray_1" color_hover="accent_3">
+  GitHub
+</LinkText>
 ```
