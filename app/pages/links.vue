@@ -26,35 +26,24 @@ const get_social_label = (href: string): string => {
     </Text>
 
     <!-- Карточки ссылок -->
-    <Flex wrap="wrap" :gap="24">
-      <Flex :tag="NuxtLink" :padding="18" v-for="social in SOCIALS" :key="social.href" :to="social.href" target="_blank" rel="noopener noreferrer" :css="{
+    <Flex direction="column" :gap="32">
+      <Flex :tag="NuxtLink" direction="column" :padding="16" v-for="social in SOCIALS" :key="social.href" :to="social.href" target="_blank" rel="noopener noreferrer" :css="{
         '--card-color': get_color('gray_8'),
-        '--card-glow': get_color('accent_9'),
         position: 'relative',
         overflow: 'hidden',
         alignItems: 'stretch',
         color: get_color('gray_2'),
         border: `${get_rem(2)} solid var(--card-color)`,
         cursor: 'pointer',
-        background: `linear-gradient(160deg, ${get_color('gray_9')} 0%, var(--card-glow) 100%)`,
-        transition: `color ${TOKENS.transition}, border-color ${TOKENS.transition}, background ${TOKENS.transition}`,
+        transition: `color ${TOKENS.transition}, border-color ${TOKENS.transition}`,
         hover: {
           color: get_color('accent_2'),
           '--card-color': get_color('accent_2'),
-          '--card-glow': get_color('accent_8')
         }
       }">
-        <Flex direction="column" justify_content="space-between" :gap="28" :css="{ width: '100%' }">
-          <Icon :name="social.icon" :css="{
-            fontSize: 40,
-            color: 'var(--card-color)',
-            transition: `color ${TOKENS.transition}`
-          }" />
-
-          <Flex direction="column" :gap="8">
-            <Text family="heading" size="default">{{ social.label }}</Text>
-            <Text family="body" size="xs" color="gray_5" mono>{{ get_social_label(social.href) }}</Text>
-          </Flex>
+        <Flex direction="column" align_items="center" :gap="8">
+          <Text family="heading" size="default"><Flex :gap="12"><Icon :name="social.icon" />{{ social.label }}</Flex></Text>
+          <Text family="body" size="xs" color="gray_5" mono>{{ get_social_label(social.href) }}</Text>
         </Flex>
       </Flex>
     </Flex>
