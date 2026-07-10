@@ -27,7 +27,7 @@ const get_social_label = (href: string): string => {
 
     <!-- Карточки ссылок -->
     <Flex direction="column" :gap="32">
-      <Flex :tag="NuxtLink" direction="column" :padding="16" v-for="social in SOCIALS" :key="social.href" :to="social.href" target="_blank" rel="noopener noreferrer" :css="{
+      <Flex :tag="NuxtLink" direction="column" :padding="16" v-for="social in SOCIALS" :key="social.href" :href="social.href" target="_blank" rel="noopener noreferrer" :css="{
         '--card-color': get_color('gray_8'),
         position: 'relative',
         overflow: 'hidden',

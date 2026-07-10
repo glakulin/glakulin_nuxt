@@ -1,6 +1,10 @@
 // Полезные функции
 
+import type { Component } from "vue";
 import { TOKENS, type Color_Name, type Color_Scheme, type Color_Shade, type Size } from "./tokens";
+
+// Тег или компонент для атомов
+export type Tag = keyof HTMLElementTagNameMap | Component;
 
 // Обработка чисел в css
 export type Number_Rem = number | readonly number[];

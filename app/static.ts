@@ -28,7 +28,8 @@ type Card = {
   icon: string,
   description: string,
   group?: string,
-  url: string
+  url: string,
+  thumbnail?: string
 };
 
 // Иконки категорий
@@ -147,5 +148,17 @@ export const HARDWARE: Hardware_Group[] = [
       "Keyboard — defender",
       "USB 32GB x2"
     ]
+  }
+]
+
+// Проекты
+export const PROJECTS: Card[] = [
+  {
+    name: "glakulin_nuxt",
+    icon: "nf-md-nuxt",
+    description: "Personal portfolio website built with Nuxt 4 and Vue 3. Custom CSS-in-JS atoms, minimalist flat design, responsive layout and a masonry-based skills grid.",
+    group: "Web",
+    url: "https://github.com/glakulin/glakulin_nuxt",
+    thumbnail: "/projects/glakulin_nuxt.png"
   }
 ]
