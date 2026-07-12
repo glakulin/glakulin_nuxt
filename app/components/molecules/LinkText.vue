@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
 import { TOKENS, type Color_Scheme } from "~/tokens";
-import { get_color, get_rem } from "~/utilities";
+import { get_color, get_disabled, get_rem } from "~/utilities";
 import { Flex, Icon } from "../atoms";
 import { type Css_Rule } from "~/composables/use_css";
 
@@ -11,6 +11,7 @@ const props = defineProps<{
   color?: Color_Scheme;
   color_hover?: Color_Scheme;
   href?: string;
+  disabled?: boolean;
   css?: Css_Rule;
 }>();
 
@@ -30,10 +31,11 @@ const css_rule = computed<Css_Rule>(() => {
     // 2. Добавляем flex для выравнивания иконки и текста
     color: base_color,
     transition: `color ${TOKENS.transition}`,
-    cursor: "pointer",
+    cursor: props.disabled ? "default" : "pointer",
     hover: {
       color: hover_color
     },
+    ...(props.disabled ? get_disabled() : {}),
     ...props.css
   };
 });

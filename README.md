@@ -220,6 +220,7 @@ Text link with color support and automatic external link detection.
 | `href` | `string` | Link URL |
 | `color` | `Color_Scheme` | Text color |
 | `color_hover` | `Color_Scheme` | Hover color |
+| `disabled` | `boolean` | Disabled state (no pointer, dimmed, no interaction) |
 | `css` | `Css_Rule` | Additional styles |
 
 External links automatically open in a new tab with a ↗ icon.
@@ -231,4 +232,45 @@ External links automatically open in a new tab with a ↗ icon.
 <LinkText href="https://github.com" color="gray_1" color_hover="accent_3">
   GitHub
 </LinkText>
+```
+
+#### `Button`
+Button built on `Flex` + `Text`. Renders as `button` by default, or any tag/component (e.g. `NuxtLink`) via `tag`. Padding and gap scale with `size`.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `tag` | `Tag` | `"button"` | HTML tag or component |
+| `style` | `"background" \| "outline" \| "outline_alt"` | `"background"` | Visual variant |
+| `size` | `Size` | `"default"` | Size (`default` → `xl`) |
+| `mono` | `boolean` | `false` | Monospace font |
+| `color` | `Color_Scheme` | `"gray_9"` | Text color |
+| `color_hover` | `Color_Scheme` | `"gray_9"` | Text color on hover |
+| `background` | `Color_Scheme` | `"gray_1"` | Background / hover-fill color |
+| `background_hover` | `Color_Scheme` | `"gray_3"` | Background on hover (`style="background"`) |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `css` | `Css_Rule` | — | Additional styles |
+
+**Style variants:**
+- `background` — filled button; hover changes background to `background_hover` and text to `color_hover`.
+- `outline` — transparent background with `color` border; hover changes text and border to `color_hover`.
+- `outline_alt` — like `outline`, but hover fills background with `background` (text color unchanged).
+
+```vue
+<Button>Send</Button>
+
+<Button :tag="NuxtLink" to="/about" size="md" mono>
+  Details
+</Button>
+
+<Button :style="'outline'" color="accent_5">
+  Outline
+</Button>
+
+<Button :style="'outline_alt'" color="accent_5" background="accent_1">
+  Outline Alt
+</Button>
+
+<Button :disabled="true" background="gray_3">
+  Disabled
+</Button>
 ```

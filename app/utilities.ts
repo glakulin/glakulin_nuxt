@@ -2,6 +2,7 @@
 
 import type { Component } from "vue";
 import { TOKENS, type Color_Name, type Color_Scheme, type Color_Shade, type Size } from "./tokens";
+import { type Css_Rule } from "./composables/use_css";
 
 // Тег или компонент для атомов
 export type Tag = keyof HTMLElementTagNameMap | Component;
@@ -29,6 +30,14 @@ export const get_color = (scheme: Color_Scheme): string => {
   return TOKENS.colors[color_name][color_shade];
 };
 
+
+// Стили для отключённого состояния
+export const get_disabled = (): Css_Rule => ({
+  cursor: "default",
+  opacity: 0.5,
+  pointerEvents: "none",
+  userSelect: "none",
+});
 
 // Текущий брейкпоинт по ширине экрана
 export const get_size = (width: number): Size => {

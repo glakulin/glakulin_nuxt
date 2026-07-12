@@ -30,3 +30,4 @@ logs
 project_context.md
 instructions
 AGENTS.md
+.env*

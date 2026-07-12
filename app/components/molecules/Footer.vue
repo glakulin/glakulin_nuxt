@@ -16,7 +16,7 @@ const css_rule = computed<Css_Rule>(() => ({
 </script>
 
 <template>
-    <Flex :css="css_rule" wrap="wrap" :padding="12" justify_content="space-between" align_items="center">
+    <Flex tag="footer" :css="css_rule" wrap="wrap" :padding="12" justify_content="space-between" align_items="center">
       <Flex :gap="8" direction="column">
         <LinkText v-for="social in SOCIALS" :key="social.label" :href="social.href" color="gray_1" color_hover="gray_3">
           <Text family="body" size="xs">
