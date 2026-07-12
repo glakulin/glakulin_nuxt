@@ -123,17 +123,20 @@ const gap = computed(() => gap_by_size[props.size]);
 <template>
   <Flex
     :tag="props.tag"
-    inline
-    align_items="center"
-    justify_content="center"
-    :gap="gap"
-    :padding="padding"
     :css="css_rule"
     :disabled="props.disabled || undefined"
     v-bind="$attrs"
   >
     <Text family="body" :size="props.size" :mono="props.mono">
-      <slot />
+      <Flex 
+        inline
+        align_items="center"
+        justify_content="center"
+        :gap="gap"
+        :padding="padding"
+      >
+        <slot />
+      </Flex>
     </Text>
   </Flex>
 </template>
