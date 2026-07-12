@@ -5,12 +5,13 @@ type Link = {
   label: string;
   href: string;
   icon: string;
-}
+};
 
 // Список страниц
 export const PAGES: Link[] = [
   { label: "home", href: "/", icon: "nf-md-home" },
-  { label: "links", href: "/links", icon: "nf-fa-link" }
+  { label: "links", href: "/links", icon: "nf-fa-link" },
+  { label: "table", href: "/table", icon: "nf-md-table" }
 ];
 
 // Список соцсетей
@@ -114,7 +115,7 @@ export const SOFTWARE: Card[] = [
     "description": "Fast all-in-one JavaScript/TypeScript runtime, package manager, and bundler. Built for speed, compatible with Node.js modules, and includes a built-in test runner.",
     "url": "https://bun.sh/"
   }
-]
+];
 
 
 // Железо
@@ -150,7 +151,7 @@ export const HARDWARE: Hardware_Group[] = [
       "USB 32GB x2"
     ]
   }
-]
+];
 
 // Проекты
 export const PROJECTS: Card[] = [
@@ -162,4 +163,4 @@ export const PROJECTS: Card[] = [
     url: "https://github.com/glakulin/glakulin_nuxt",
     thumbnail: "/projects/glakulin_nuxt.png"
   }
-]
+];
