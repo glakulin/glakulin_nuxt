@@ -19,7 +19,8 @@ export const SOCIALS: Link[] = [
   { label: "YouTube", href: "https://www.youtube.com/@glakulin", icon: "nf-md-youtube" },
   { label: "Twitch", href: "https://www.twitch.tv/glakulin", icon: "nf-md-twitch" },
   { label: "GitHub", href: "https://github.com/glakulin", icon: "nf-md-github" },
-  { label: "Email", href: "mailto:danielglakulin@gmail.com", icon: "nf-md-at" }
+  { label: "Email", href: "mailto:danielglakulin@gmail.com", icon: "nf-md-at" },
+  { label: "Donate", href: "https://web.tribute.tg/d/M59", icon: "nf-fa-hand_holding_dollar" }
 ];
 
 // Карточки

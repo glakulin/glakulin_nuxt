@@ -18,6 +18,7 @@ const screen_padding = computed(() => {
     <Header />
     <Flex
       tag="main" direction="column" :gap="64" :padding="[96, screen_padding, 12, screen_padding]"
+      align_items="flex-start" justify_content="flex-start"
     >
       <NuxtPage />
       <Footer />
