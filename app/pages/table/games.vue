@@ -19,42 +19,123 @@ interface Game {
 // Подключение
 const SUPABASE = useSupabaseClient();
 
-// Запрос
+// Загружаем только базовые данные игр (без иконок)
 const { data: GAMES, pending, error } = useAsyncData<Game[]>(
-  "game-list-with-icons",
+  "game-list",
   async () => {
-    // 1. Получаем игры из Supabase
     const { data, error } = await SUPABASE
       .from("games")
       .select("*")
       .order("status").order("started_at");
 
     if (error) throw new Error(error.message)
-    if (!data) return []
-
-    const games = data as Game[]
-    if (games.length === 0) return []
-
-    // 2. Получаем иконки пакетно через наш серверный API
-    const steamIds = games.map(g => g.steam_id)
-    let iconsMap: Record<number, string | null> = {}
-    
-    try {
-      iconsMap = await $fetch('/api/steamgriddb/icons', {
-        method: 'POST',
-        body: { steam_ids: steamIds }
-      })
-    } catch (e) {
-      console.error("Failed to fetch icons:", e)
-    }
-
-    // 3. Обогащаем игры иконками
-    return games.map(game => ({
-      ...game,
-      icon_url: iconsMap[game.steam_id] || null
-    }))
+    return (data as Game[]) || []
   }
 );
+
+// Состояние для отслеживания загруженных иконок
+const loadedIcons = ref<Set<number>>(new Set())
+const loadingIcons = ref<Set<number>>(new Set())
+
+// Функция для загрузки иконок для видимых элементов
+// Функция для загрузки иконок для видимых элементов
+const loadVisibleIcons = async (visibleSteamIds: number[]) => {
+  // Фильтруем только те, которые ещё не загружены и не загружаются
+  const toLoad = visibleSteamIds.filter(
+    id => !loadedIcons.value.has(id) && !loadingIcons.value.has(id)
+  )
+  
+  if (toLoad.length === 0) return
+  
+  // Добавляем в статус "загружается"
+  toLoad.forEach(id => loadingIcons.value.add(id))
+  
+  try {
+    const iconsMap = await $fetch('/api/steamgriddb/icons', {
+      method: 'POST',
+      body: { steam_ids: toLoad }
+    }) as Record<number, string | null>
+    
+    // Обновляем данные игр
+    if (GAMES.value) {
+      GAMES.value = GAMES.value.map(game => {
+        if (iconsMap[game.steam_id] !== undefined) {
+          // Явно приводим undefined к null
+          return { 
+            ...game, 
+            icon_url: iconsMap[game.steam_id] ?? null 
+          }
+        }
+        return game
+      })
+    }
+    
+    // Отмечаем как загруженные
+    toLoad.forEach(id => {
+      loadedIcons.value.add(id)
+      loadingIcons.value.delete(id)
+    })
+  } catch (e) {
+    console.error("Failed to load icons:", e)
+    toLoad.forEach(id => loadingIcons.value.delete(id))
+  }
+}
+
+// Intersection Observer для отслеживания видимости
+const observer = ref<IntersectionObserver | null>(null)
+const visibleElements = ref<Map<Element, number>>(new Map()) // element -> steam_id
+const batchTimeout = ref<NodeJS.Timeout | null>(null)
+
+onMounted(() => {
+  observer.value = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        const steamId = visibleElements.value.get(entry.target)
+        if (!steamId) return
+        
+        if (entry.isIntersecting) {
+          // Элемент стал видимым
+          if (!loadedIcons.value.has(steamId)) {
+            // Добавляем в очередь на загрузку
+            if (!batchTimeout.value) {
+              batchTimeout.value = setTimeout(() => {
+                const visibleIds = Array.from(visibleElements.value.values())
+                  .filter(id => !loadedIcons.value.has(id))
+                loadVisibleIcons(visibleIds)
+                batchTimeout.value = null
+              }, 100) // Задержка 100ms для батчинга
+            }
+          }
+        }
+      })
+    },
+    {
+      rootMargin: '200px', // Начинаем загружать за 200px до появления
+      threshold: 0.1
+    }
+  )
+})
+
+onUnmounted(() => {
+  observer.value?.disconnect()
+  if (batchTimeout.value) clearTimeout(batchTimeout.value)
+})
+
+// Функция для регистрации элемента
+const registerElement = (el: Element | null, steamId: number) => {
+  if (el && observer.value) {
+    observer.value.observe(el)
+    visibleElements.value.set(el, steamId)
+  }
+}
+
+// Функция для отмены регистрации
+const unregisterElement = (el: Element | null) => {
+  if (el && observer.value) {
+    observer.value.unobserve(el)
+    visibleElements.value.delete(el)
+  }
+}
 
 // Цвет статуса
 const get_status = (status: Game["status"]) => {
@@ -80,7 +161,7 @@ const get_status = (status: Game["status"]) => {
     <div v-if="pending">Загрузка...</div>
     <div v-else-if="error">Ошибка: {{ error }}</div>
     <Masonry mode="vertical" :columns="4" :gap="32">
-      <Flex v-for="game in GAMES" :gap="12" :padding="16" :css="{
+      <Flex v-for="game in GAMES" :key="game.id" :gap="12" :padding="16" :css="{
         borderWidth: 1,
         borderColor: get_color('gray_8'),
         borderStyle: 'solid'
@@ -89,10 +170,10 @@ const get_status = (status: Game["status"]) => {
             :src="game.icon_url || '/placeholder-icon.png'"
             alt="game icon"
             :css="{
-              width: 64,
-              height: 64,
+              width: 48,
+              height: 48,
               objectFit: 'cover',
-              borderRadius: '8px'
+              backgroundColor: get_color('gray_8')
             }" 
           />
         <Flex align_items="flex-start" direction="column" :gap="8">
