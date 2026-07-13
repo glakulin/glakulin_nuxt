@@ -2,24 +2,36 @@
 
 <script setup lang="ts">
 import { Flex, Icon, Style, Text } from '~/components/atoms';
-import { Masonry, Section } from '~/components/molecules';
+import { Masonry, ModalGame, Section } from '~/components/molecules';
+import { TOKENS } from '~/tokens';
 import { get_color } from '~/utilities';
-
-interface Game {
-  id: number;
-  title: string;
-  started_at?: string;
-  completed_at?: string;
-  dropped_at?: string;
-  steam_id: number;
-  status: "playing" | "planned" | "completed" | "dropped";
-  playlist?: string;
-  icon_url: string | null;
-};
+import type { Game } from '~/types/game';
 
 const SUPABASE = useSupabaseClient();
 
-// Запрос
+// Кэш списка на сутки (persist между перезагрузками в рамках сессии)
+const CACHE_KEY = "game-list-with-icons";
+const CACHE_TTL = 86400000; // 24ч
+
+const read_session_cache = (): Game[] | undefined => {
+  if (import.meta.server) return undefined
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY)
+    if (!raw) return undefined
+    const { ts, data } = JSON.parse(raw) as { ts: number; data: Game[] }
+    if (Date.now() - ts < CACHE_TTL) return data
+  } catch { /* ignore */ }
+  return undefined
+};
+
+const write_session_cache = (data: Game[]) => {
+  if (import.meta.server) return
+  try {
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }))
+  } catch { /* ignore */ }
+};
+
+// Запрос (кэш на сутки в рамках сессии)
 const { data: GAMES, pending, error } = useAsyncData<Game[]>(
   "game-list-with-icons",
   async () => {
@@ -27,7 +39,7 @@ const { data: GAMES, pending, error } = useAsyncData<Game[]>(
     const { data, error } = await SUPABASE
       .from("games")
       .select("*")
-      .order("status").order("started_at");
+      .order("status").order("started_at").order("title");
 
     if (error) throw new Error(error.message)
     if (!data) return []
@@ -49,10 +61,16 @@ const { data: GAMES, pending, error } = useAsyncData<Game[]>(
     }
 
     // 3. Обогащаем игры иконками
-    return games.map(game => ({
+    const enriched = games.map(game => ({
       ...game,
       icon_url: iconsMap[game.steam_id] || null
     }))
+    write_session_cache(enriched)
+    return enriched
+  },
+  {
+    // Возвращаем кэш сессии, если он свежее суток
+    getCachedData: () => read_session_cache(),
   }
 );
 
@@ -64,6 +82,45 @@ const get_status = (status: Game["status"]) => {
     case "dropped": return "error_5";
   }
 };
+
+// Модальное окно
+const selected_game = ref<Game | null>(null);
+const is_modal_open = ref(false);
+
+const open_game = (game: Game) => {
+  selected_game.value = game;
+  is_modal_open.value = true;
+};
+
+const close_modal = () => {
+  is_modal_open.value = false;
+};
+
+
+// Адаптив
+const { size } = use_window_size();
+
+const columns = computed(() => {
+  switch (size.value) {
+    case "xl":
+      return 6;
+
+    case "lg":
+      return 5;
+
+    case "md":
+      return 4;
+
+    case "sm":
+      return 3;
+
+    case "xs":
+      return 2;
+
+    default:
+      return 1;
+  }
+});
 </script>
 
 <template>
@@ -71,35 +128,49 @@ const get_status = (status: Game["status"]) => {
     <template #heading><Icon name="nf-md-table" />Table</template>
     <div v-if="pending">Загрузка...</div>
     <div v-else-if="error">Ошибка: {{ error }}</div>
-    <Masonry v-else mode="vertical" :columns="4" :gap="32">
+    <Masonry v-else mode="vertical" :columns="columns">
       <Flex 
         v-for="game in GAMES" 
         :key="game.id"
         :gap="12" 
-        :padding="16" 
+        :padding="16"
+        role="button"
+        tabindex="0"
         :css="{
-          borderWidth: 1,
+          borderWidth: 3,
           borderColor: get_color('gray_8'),
-          borderStyle: 'solid'
+          borderStyle: 'solid',
+          transition: `border-color ${TOKENS.transition}`,
+          cursor: 'pointer',
+          hover: {
+            borderColor: get_color('accent_5'),
+          }
         }"
+        @click="open_game(game)"
+        @keydown.enter="open_game(game)"
+        @keydown.space.prevent="open_game(game)"
       >
-        <Style tag="img" 
+        <Flex tag="img" 
             :src="game.icon_url || '/placeholder-icon.png'"
             alt="game icon"
+            :padding="8"
+            :radius="8"
             :css="{
-              width: 48,
-              height: 48,
+              width: 64,
+              height: 64,
               objectFit: 'cover',
-              backgroundColor: get_color('gray_8')
+              backgroundColor: get_color('gray_8'),
             }" 
           />
-        <Flex align_items="flex-start" direction="column" :gap="8">
-          {{ game.title }}
-          <Flex :padding="4" :css="{ backgroundColor: get_color(get_status(game.status))}" >
+        <Flex direction="column" :gap="8">
+          <Text family="body" size="xs">{{ game.title }}</Text>
+          <Flex align_items="center" justify_content="center" :radius="32" :padding="6" :css="{ backgroundColor: get_color(get_status(game.status))}" >
             <Text family="body" mono size="default" color="gray_9">{{ game.status }}</Text>
           </Flex>
         </Flex>
       </Flex>
     </Masonry>
+
+    <ModalGame :game="selected_game" :open="is_modal_open" @close="close_modal" />
   </Section>
 </template>

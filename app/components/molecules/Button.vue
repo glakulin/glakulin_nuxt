@@ -9,6 +9,7 @@ import { type Css_Rule } from "~/composables/use_css";
 // Свойства
 const props = withDefaults(defineProps<{
   tag?: Tag; // Тег или компонент (по умолчанию button, можно NuxtLink)
+  icon?: boolean;
 
   variant?: "background" | "outline" | "outline_alt"; // Вариант оформления
   size?: Size; // Размер: default..xl
@@ -33,6 +34,7 @@ const props = withDefaults(defineProps<{
   background: "gray_1",
   background_hover: "gray_3",
   disabled: false,
+  icon: false,
 });
 
 const padding_by_size: Record<Size, Number_Rem> = {
@@ -154,7 +156,7 @@ const css_rule = computed<Css_Rule>(() => {
         align_items="center"
         justify_content="center"
         :gap="gap"
-        :padding="padding"
+        :padding="icon ? (padding as number[])[0] : padding"
       >
         <slot />
       </Flex>
