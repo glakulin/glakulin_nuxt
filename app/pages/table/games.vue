@@ -26,98 +26,29 @@ const { data: GAMES, pending, error } = useAsyncData<Game[]>(
       .order("status").order("started_at");
 
     if (error) throw new Error(error.message);
-    return (data as Game[]) || [];
-  }
-);
-
-const loadedIcons = ref<Set<number>>(new Set());
-const loadingIcons = ref<Set<number>>(new Set());
-
-const loadVisibleIcons = async (visibleSteamIds: number[]) => {
-  const toLoad = visibleSteamIds.filter(
-    id => !loadedIcons.value.has(id) && !loadingIcons.value.has(id)
-  );
-  
-  if (toLoad.length === 0) return;
-  
-  console.log("🌐 Loading icons for:", toLoad);
-  toLoad.forEach(id => loadingIcons.value.add(id));
-  
-  try {
-    const iconsMap = await $fetch('/api/steamgriddb/icons', {
-      method: 'POST',
-      body: { steam_ids: toLoad }
-    }) as Record<number, string | null>;
+    const games = (data as Game[]) || [];
     
-    console.log("📥 Got icons:", iconsMap);
+    if (games.length === 0) return [];
+
+    // Загружаем иконки для всех игр
+    const steamIds = games.map(g => g.steam_id);
+    let iconsMap: Record<number, string | null> = {};
     
-    if (GAMES.value) {
-      GAMES.value = GAMES.value.map(game => {
-        if (iconsMap[game.steam_id] !== undefined) {
-          return { 
-            ...game, 
-            icon_url: iconsMap[game.steam_id] ?? null 
-          };
-        }
-        return game;
-      });
+    try {
+      iconsMap = await $fetch('/api/steamgriddb/icons', {
+        method: 'POST',
+        body: { steam_ids: steamIds }
+      }) as Record<number, string | null>;
+    } catch (e) {
+      console.error("Failed to load icons:", e);
     }
-    
-    toLoad.forEach(id => {
-      loadedIcons.value.add(id);
-      loadingIcons.value.delete(id);
-    });
-  } catch (e) {
-    console.error("❌ Failed to load icons:", e);
-    toLoad.forEach(id => loadingIcons.value.delete(id));
-  }
-};
 
-// Создаём observer СРАЗУ, не в onMounted
-const visibleElements = new Map<Element, number>();
-let batchTimeout: ReturnType<typeof setTimeout> | null = null;
-
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(entry => {
-      const steamId = visibleElements.get(entry.target);
-      if (!steamId) return;
-      
-      if (entry.isIntersecting && !loadedIcons.value.has(steamId)) {
-        console.log("👁️ Element visible:", steamId);
-        if (!batchTimeout) {
-          batchTimeout = setTimeout(() => {
-            const visibleIds = Array.from(visibleElements.values())
-              .filter(id => !loadedIcons.value.has(id));
-            loadVisibleIcons(visibleIds);
-            batchTimeout = null;
-          }, 100);
-        }
-      }
-    });
-  },
-  {
-    rootMargin: '200px',
-    threshold: 0.1
+    return games.map(game => ({
+      ...game,
+      icon_url: iconsMap[game.steam_id] ?? null
+    }));
   }
 );
-
-// Ref-функция для v-for — вызывается, когда элемент появляется в DOM
-const setRef = (steamId: number) => (el: any) => {
-  const element = el?.$el || el; // Берём корневой DOM-элемент, если это компонент
-  if (element instanceof Element) {
-    console.log("📌 Registering element for steam_id:", steamId);
-    observer.observe(element);
-    visibleElements.set(element, steamId);
-  } else {
-    console.warn("⚠️ Could not get DOM element for steam_id:", steamId, el);
-  }
-};
-
-onUnmounted(() => {
-  observer.disconnect();
-  if (batchTimeout) clearTimeout(batchTimeout);
-});
 
 const get_status = (status: Game["status"]) => {
   switch (status) {
@@ -138,7 +69,6 @@ const get_status = (status: Game["status"]) => {
       <Flex 
         v-for="game in GAMES" 
         :key="game.id"
-        :ref="setRef(game.steam_id)"
         :gap="12" 
         :padding="16" 
         :css="{
