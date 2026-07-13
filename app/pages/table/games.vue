@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { Flex, Icon, Text } from '~/components/atoms';
+import { Flex, Icon, Style, Text } from '~/components/atoms';
 import { Masonry, Section } from '~/components/molecules';
 import { get_color } from '~/utilities';
-import SGDB from "steamgriddb";
 
 // Тип из таблицы
 interface Game {
@@ -14,6 +13,7 @@ interface Game {
   steam_id: number;
   status: "playing" | "planned" | "completed" | "dropped";
   playlist?: string;
+  icon_url: string | null;
 };
 
 // Подключение
@@ -21,16 +21,38 @@ const SUPABASE = useSupabaseClient();
 
 // Запрос
 const { data: GAMES, pending, error } = useAsyncData<Game[]>(
-  "game-list",
+  "game-list-with-icons",
   async () => {
+    // 1. Получаем игры из Supabase
     const { data, error } = await SUPABASE
       .from("games")
       .select("*")
       .order("status").order("started_at");
 
-      if (error) throw new Error(error.message)
+    if (error) throw new Error(error.message)
+    if (!data) return []
 
-      return data as Game[];
+    const games = data as Game[]
+    if (games.length === 0) return []
+
+    // 2. Получаем иконки пакетно через наш серверный API
+    const steamIds = games.map(g => g.steam_id)
+    let iconsMap: Record<number, string | null> = {}
+    
+    try {
+      iconsMap = await $fetch('/api/steamgriddb/icons', {
+        method: 'POST',
+        body: { steam_ids: steamIds }
+      })
+    } catch (e) {
+      console.error("Failed to fetch icons:", e)
+    }
+
+    // 3. Обогащаем игры иконками
+    return games.map(game => ({
+      ...game,
+      icon_url: iconsMap[game.steam_id] || null
+    }))
   }
 );
 
@@ -50,25 +72,6 @@ const get_status = (status: Game["status"]) => {
       return "error_5";
   }
 };
-
-const client = new SGDB(process.env.STEAMGRIDDB_KEY!);
-
-// Реактивный объект для хранения иконок по steam_id
-const icons = ref<Record<string, string | undefined>>({});
-
-// Функция загрузки иконки для конкретной игры
-async function loadIcon(steam_id: number) {
-  if (icons.value[steam_id] !== undefined) return; // уже загружено
-  const url = await client.getIconsBySteamAppId(steam_id);
-  icons.value[steam_id] = url[0]?.url.href;
-}
-
-// Загружаем иконки для всех игр после монтирования
-onMounted(async () => {
-  if (GAMES.value) {
-    await Promise.all(GAMES.value.map(game => loadIcon(game.steam_id)));
-  }
-});
 </script>
 
 <template>
@@ -77,13 +80,20 @@ onMounted(async () => {
     <div v-if="pending">Загрузка...</div>
     <div v-else-if="error">Ошибка: {{ error }}</div>
     <Masonry mode="vertical" :columns="4" :gap="32">
-      <Flex v-for="game in GAMES">
-        <img 
-            v-if="icons[game.steam_id]" 
-            :src="icons[game.steam_id]!" 
-            alt="game icon" 
-            width="32" 
-            height="32"
+      <Flex v-for="game in GAMES" :gap="12" :padding="16" :css="{
+        borderWidth: 1,
+        borderColor: get_color('gray_8'),
+        borderStyle: 'solid'
+      }">
+        <Style tag="img" 
+            :src="game.icon_url || '/placeholder-icon.png'"
+            alt="game icon"
+            :css="{
+              width: 64,
+              height: 64,
+              objectFit: 'cover',
+              borderRadius: '8px'
+            }" 
           />
         <Flex align_items="flex-start" direction="column" :gap="8">
           {{ game.title }}
