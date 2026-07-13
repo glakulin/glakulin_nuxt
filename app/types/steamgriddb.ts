@@ -18,3 +18,18 @@ export interface SteamGridDBIconsResponse {
   success: boolean
   data: SteamGridDBIcon[]
 }
+
+export interface SteamGridDBLogo {
+  id: number
+  score: number
+  style: 'official' | 'white' | 'black' | 'custom' | string
+  url: string
+  thumb: string
+  tags: string[]
+  author: SteamGridDBAuthor
+}
+
+export interface SteamGridDBLogosResponse {
+  success: boolean
+  data: SteamGridDBLogo[]
+}

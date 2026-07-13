@@ -8,7 +8,7 @@ The project is built on **Atomic Design** with a custom **CSS-in-JS** system via
 
 Components are divided into two levels:
 - **Atoms** — basic reusable elements (`Style`, `Flex`, `Grid`, `Text`, `Icon`).
-- **Molecules** — composite components built from atoms (`Section`, `Masonry`, `LinkText`, `Button`, `InputText`, `CardSkill`, `Header`, `Footer`, `HeaderMenu`).
+- **Molecules** — composite components built from atoms (`Section`, `Masonry`, `LinkText`, `Button`, `InputText`, `CardSkill`, `Header`, `Footer`, `HeaderMenu`, `ModalGame`).
 
 ## File Structure
 
@@ -324,4 +324,37 @@ Text input built on `Flex` + `Text` + `Style`. Supports a floating label (when n
 <InputText variant="line" color="gray_9">Line</InputText>
 
 <InputText disabled background="gray_3">Disabled</InputText>
+```
+
+#### `ModalGame`
+Modal dialog showing full game details, styled for the site's dark theme. Rendered via `<Teleport to="body">` with a dimmed, blurred backdrop. The **logo** (not the icon) is fetched lazily from SteamGridDB through the `/api/steamgriddb/logos` endpoint when the modal opens; if no logo is found, it falls back to the game's `icon_url`. Closes on backdrop click, the close button, or the `Escape` key.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `game` | `Game \| null` | — | Game to display (see `app/types/game.ts`) |
+| `open` | `boolean` | `false` | Whether the modal is visible |
+
+**Events:**
+- `close` — emitted when the modal should close (backdrop, close button, or `Escape`)
+
+**Behavior:**
+- Logo is requested only once per open, via `POST /api/steamgriddb/logos` with `{ steam_ids: [game.steam_id] }`.
+- Shows a spinner (`nf-md-loading`) while the logo loads, then the logo, then falls back to the icon.
+- Displays `title`, `status` (colored badge, larger text), `steam_id`, and any of `started_at` / `completed_at` / `dropped_at` / `playlist` that are present. The `steam_id` and `playlist` values are rendered as `LinkText` (open in a new tab): `steam_id` links to `https://store.steampowered.com/app/{steam_id}/`, `playlist` shows the word **playlist**.
+- The close button uses the `Button` molecule (round, `gray_8` background, `gray_3` icon, `gray_7` on hover).
+- The logo area has the same backing as cards (`gray_9` background with a `gray_8` border) so a black logo stays visible.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { ModalGame } from "~/components/molecules";
+import type { Game } from "~/types/game";
+
+const selected = ref<Game | null>(null);
+const open = ref(false);
+</script>
+
+<template>
+  <ModalGame :game="selected" :open="open" @close="open = false" />
+</template>
 ```

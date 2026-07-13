@@ -25,6 +25,8 @@ const props = withDefaults(defineProps<{
   disabled?: boolean; // Отключённый input
 
   css?: Css_Rule; // Дополнительные стили
+
+  modelValue?: string | number; // v-model
 }>(), {
   variant: "background",
   size: "default",
@@ -78,6 +80,17 @@ const input_height = computed(() => {
 // Состояние фокуса и наличия значения для плавающего лейбла
 const is_focused = ref(false);
 const has_value = ref(false);
+
+// v-model
+const emit = defineEmits<{
+  'update:modelValue': [value: string | number];
+}>();
+
+const on_input = (e: Event) => {
+  const value = (e.target as HTMLInputElement).value;
+  has_value.value = value.length > 0;
+  emit('update:modelValue', value);
+};
 
 // Плавающий label не нужен, если задан placeholder (используем нативный placeholder)
 const has_label = computed(() => !props.placeholder);
@@ -305,9 +318,10 @@ const css_rule = computed<Css_Rule>(() => {
         :pattern="props.pattern"
         :placeholder="props.placeholder"
         :name="props.name"
+        :value="props.modelValue"
         @focus="is_focused = true"
         @blur="is_focused = false"
-        @input="has_value = ($event.target as HTMLInputElement).value.length > 0"
+        @input="on_input"
       />
       <Style
         v-if="is_password"
