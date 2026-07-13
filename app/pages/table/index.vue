@@ -1,3 +1,5 @@
+<!-- Выбор таблицы -->
+
 <script setup lang="ts">
 import { NuxtLink } from '#components';
 import { Flex, Icon } from '~/components/atoms';

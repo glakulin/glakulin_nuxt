@@ -8,7 +8,7 @@ The project is built on **Atomic Design** with a custom **CSS-in-JS** system via
 
 Components are divided into two levels:
 - **Atoms** — basic reusable elements (`Style`, `Flex`, `Grid`, `Text`, `Icon`).
-- **Molecules** — composite components built from atoms (`Section`, `Masonry`, `LinkText`).
+- **Molecules** — composite components built from atoms (`Section`, `Masonry`, `LinkText`, `Button`, `InputText`, `CardSkill`, `Header`, `Footer`, `HeaderMenu`).
 
 ## File Structure
 
@@ -240,7 +240,7 @@ Button built on `Flex` + `Text`. Renders as `button` by default, or any tag/comp
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `tag` | `Tag` | `"button"` | HTML tag or component |
-| `style` | `"background" \| "outline" \| "outline_alt"` | `"background"` | Visual variant |
+| `variant` | `"background" \| "outline" \| "outline_alt"` | `"background"` | Visual variant |
 | `size` | `Size` | `"default"` | Size (`default` → `xl`) |
 | `mono` | `boolean` | `false` | Monospace font |
 | `color` | `Color_Scheme` | `"gray_9"` | Text color |
@@ -262,15 +262,66 @@ Button built on `Flex` + `Text`. Renders as `button` by default, or any tag/comp
   Details
 </Button>
 
-<Button :style="'outline'" color="accent_5">
+<Button variant="outline" color="accent_5">
   Outline
 </Button>
 
-<Button :style="'outline_alt'" color="accent_5" background="accent_1">
+<Button variant="outline_alt" color="accent_5" background="accent_1">
   Outline Alt
 </Button>
 
-<Button :disabled="true" background="gray_3">
+<Button disabled background="gray_3">
   Disabled
 </Button>
+```
+
+#### `InputText`
+Text input built on `Flex` + `Text` + `Style`. Supports a floating label (when no `placeholder` is set) and a password visibility toggle (eye button) for `type="password"`. All variants share the same total height (border is drawn on the `Flex` wrapper and compensated in the input height).
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `"background" \| "outline" \| "outline_alt" \| "line"` | `"background"` | Visual variant |
+| `size` | `Size` | `"default"` | Size (`default` → `xl`) |
+| `name` | `string` | — | Input name |
+| `type` | `"text" \| "password"` | `"text"` | Input type. `password` shows an eye toggle button |
+| `required` | `boolean` | `false` | Required field |
+| `pattern` | `string` | — | Validation pattern |
+| `placeholder` | `string` | — | Placeholder. **If set, the floating label is hidden** (native placeholder is used instead) |
+| `color` | `Color_Scheme` | `"gray_9"` | Text color |
+| `color_hover` | `Color_Scheme` | `"gray_9"` | Text color on hover |
+| `background` | `Color_Scheme` | `"gray_1"` | Background / fill color (also used as floated-label color) |
+| `background_hover` | `Color_Scheme` | `"gray_3"` | Background on hover (`variant="background"`) |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `css` | `Css_Rule` | — | Additional styles |
+
+**Slots:**
+- `default` — label text (only rendered when no `placeholder` is provided; floats up on focus / when filled)
+
+**Style variants:**
+- `background` — filled input; hover changes background to `background_hover`.
+- `outline` — transparent background with `color` border; hover changes text and border to `color_hover`; focus border becomes `accent_5`.
+- `outline_alt` — like `outline`, but hover fills background with `background` (text becomes `gray_1`); focus border becomes `accent_5`.
+- `line` — only a bottom border (`borderBottom`); left/right padding is `0`; focus border becomes `accent_5`.
+
+**Floating label behavior:**
+- Floats up (shrinks to `xs` for `size >= md`, else `default`) on focus or when the field has a value.
+- Color: `props.color` when resting, `props.background` when floated (not focused), `accent_5` when focused.
+- For `outline` / `outline_alt` the floated label shifts slightly left (past the border); for `background` / `line` it aligns to the left edge.
+
+```vue
+<!-- Floating label (no placeholder) -->
+<InputText size="md">Email</InputText>
+
+<!-- Placeholder instead of label -->
+<InputText placeholder="Enter your email" />
+
+<!-- Password with eye toggle -->
+<InputText type="password" placeholder="Password" />
+
+<!-- Variants -->
+<InputText variant="outline" color="accent_5">Outline</InputText>
+<InputText variant="outline_alt" color="accent_5" background="accent_1">Outline Alt</InputText>
+<InputText variant="line" color="gray_9">Line</InputText>
+
+<InputText disabled background="gray_3">Disabled</InputText>
 ```

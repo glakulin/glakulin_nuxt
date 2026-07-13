@@ -24,7 +24,7 @@ const computedClasses = computed(() => {
 </script>
 
 <template>
-  <component :is="tag" :class="computedClasses">
+  <component :is="tag" :class="computedClasses" v-bind="$attrs">
     <slot />
   </component>
 </template>
