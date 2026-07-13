@@ -23,7 +23,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     steamgriddbApiKey: process.env.STEAMGRIDDB_KEY,
     supabase: {
-      serviceKey: process.env.NUXT_SUPABASE_SERVICE_KEY,
+      secretKey: process.env.SUPABASE_SECRET_KEY,
     }
   },
 })

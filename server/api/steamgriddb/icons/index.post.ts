@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   // Используем useSupabaseClient() без параметров
   const supabase = createClient(
     "https://ugbazraostucbwvyjlgh.supabase.co",
-    config.supabase.serviceKey || "sb_publishable_k68IyZY_zTYl3nHoQRjWEw_BdQgoXf0",
+    config.supabase.secretKey || "sb_publishable_k68IyZY_zTYl3nHoQRjWEw_BdQgoXf0",
     {
       auth: {
         autoRefreshToken: false,
