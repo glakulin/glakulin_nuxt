@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
 import { TOKENS, type Color_Scheme, type Size } from "~/tokens";
-import { get_color, get_disabled, get_rem, type Tag } from "~/utilities";
+import { get_color, get_disabled, get_rem, type Number_Rem, type Tag } from "~/utilities";
 import { Flex, Text } from "../atoms";
 import { type Css_Rule } from "~/composables/use_css";
 
@@ -10,7 +10,7 @@ import { type Css_Rule } from "~/composables/use_css";
 const props = withDefaults(defineProps<{
   tag?: Tag; // Тег или компонент (по умолчанию button, можно NuxtLink)
 
-  style?: "background" | "outline" | "outline_alt"; // Вариант оформления
+  variant?: "background" | "outline" | "outline_alt"; // Вариант оформления
   size?: Size; // Размер: default..xl
   mono?: boolean; // Моноширинный шрифт
 
@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<{
   css?: Css_Rule; // Дополнительные стили
 }>(), {
   tag: "button",
-  style: "background",
+  variant: "background",
   size: "default",
   mono: false,
   color: "gray_9",
@@ -34,6 +34,47 @@ const props = withDefaults(defineProps<{
   background_hover: "gray_3",
   disabled: false,
 });
+
+const padding_by_size: Record<Size, Number_Rem> = {
+  default: [2, 4],
+  xs: [3, 6],
+  sm: [4, 8],
+  md: [6, 12],
+  lg: [7, 14],
+  xl: [8, 16],
+};
+const gap_by_size: Record<Size, number> = {
+  default: 2,
+  xs: 3,
+  sm: 4,
+  md: 6,
+  lg: 7,
+  xl: 8,
+};
+const border_width_by_size: Record<Size, number> = {
+  default: 1,
+  xs: 1,
+  sm: 1,
+  md: 2,
+  lg: 2,
+  xl: 2
+}
+
+const padding = computed<Number_Rem>(() => {
+  const p = padding_by_size[props.size];
+  // Для вариантов с border компенсируем его в вертикальном padding,
+  // чтобы все варианты были одной высоты (border рисуется на внешнем Flex
+  // и добавляет высоту элементу, как в InputText)
+  if (props.variant === "outline" || props.variant === "outline_alt") {
+    if (Array.isArray(p)) {
+      return [p[0] - border_width.value, p[1]];
+    }
+    return (p as number) - border_width.value;
+  }
+  return p;
+});
+const gap = computed(() => gap_by_size[props.size]);
+const border_width = computed(() => border_width_by_size[props.size]);
 
 // Свойства в стили
 const css_rule = computed<Css_Rule>(() => {
@@ -44,11 +85,11 @@ const css_rule = computed<Css_Rule>(() => {
 
   // Базовые стили в зависимости от варианта оформления
   const base = (() => {
-    if (props.style === "outline" || props.style === "outline_alt") {
+    if (props.variant === "outline" || props.variant === "outline_alt") {
       return {
         color: color,
         backgroundColor: "transparent",
-        border: `${get_rem(1)} solid ${color}`,
+        border: `${get_rem(border_width.value)} solid ${color}`,
       };
     }
     return {
@@ -60,16 +101,17 @@ const css_rule = computed<Css_Rule>(() => {
 
   // Hover стили в зависимости от варианта оформления
   const hover = (() => {
-    if (props.style === "outline") {
+    if (props.variant === "outline") {
       return {
         color: color_hover,
-        border: `${get_rem(1)} solid ${color_hover}`,
+        border: `${get_rem(border_width.value)} solid ${color_hover}`,
       };
     }
-    if (props.style === "outline_alt") {
+    if (props.variant === "outline_alt") {
       return {
         color: color_hover,
         backgroundColor: background,
+        borderColor: background,
       };
     }
     return {
@@ -88,7 +130,7 @@ const css_rule = computed<Css_Rule>(() => {
     hover,
 
     active: {
-      transform: "scale(0.95)"
+      transform: "scale(0.97)"
     },
 
     // Отключённое состояние
@@ -97,27 +139,6 @@ const css_rule = computed<Css_Rule>(() => {
     ...props.css,
   };
 });
-
-// Padding и gap в зависимости от размера
-const padding_by_size: Record<Size, readonly number[]> = {
-  default: [2, 4],
-  xs: [3, 6],
-  sm: [4, 8],
-  md: [6, 12],
-  lg: [7, 14],
-  xl: [8, 16],
-};
-const gap_by_size: Record<Size, number> = {
-  default: 2,
-  xs: 3,
-  sm: 4,
-  md: 6,
-  lg: 7,
-  xl: 8,
-};
-
-const padding = computed(() => padding_by_size[props.size]);
-const gap = computed(() => gap_by_size[props.size]);
 </script>
 
 <template>

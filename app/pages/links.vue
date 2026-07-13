@@ -3,7 +3,7 @@
 <script setup lang="ts">
 import { NuxtLink } from "#components";
 import { Flex, Icon, Text } from "~/components/atoms";
-import { Section } from "~/components/molecules";
+import { Section, InputText, Button } from "~/components/molecules";
 import { SOCIALS } from "~/static";
 import { TOKENS } from "~/tokens";
 import { get_color, get_rem } from "~/utilities";

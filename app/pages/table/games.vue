@@ -1,3 +1,5 @@
+<!-- Таблица игр -->
+
 <script setup lang="ts">
 import { Flex, Icon, Style, Text } from '~/components/atoms';
 import { Masonry, Section } from '~/components/molecules';
