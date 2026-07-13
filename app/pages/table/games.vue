@@ -40,6 +40,7 @@ const loadVisibleIcons = async (visibleSteamIds: number[]) => {
   
   if (toLoad.length === 0) return;
   
+  console.log("🌐 Loading icons for:", toLoad);
   toLoad.forEach(id => loadingIcons.value.add(id));
   
   try {
@@ -47,6 +48,8 @@ const loadVisibleIcons = async (visibleSteamIds: number[]) => {
       method: 'POST',
       body: { steam_ids: toLoad }
     }) as Record<number, string | null>;
+    
+    console.log("📥 Got icons:", iconsMap);
     
     if (GAMES.value) {
       GAMES.value = GAMES.value.map(game => {
@@ -65,69 +68,55 @@ const loadVisibleIcons = async (visibleSteamIds: number[]) => {
       loadingIcons.value.delete(id);
     });
   } catch (e) {
-    console.error("Failed to load icons:", e);
+    console.error("❌ Failed to load icons:", e);
     toLoad.forEach(id => loadingIcons.value.delete(id));
   }
 };
 
-const observer = ref<IntersectionObserver | null>(null);
-const visibleElements = ref<Map<Element, number>>(new Map());
-const batchTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+// Создаём observer СРАЗУ, не в onMounted
+const visibleElements = new Map<Element, number>();
+let batchTimeout: ReturnType<typeof setTimeout> | null = null;
 
-onMounted(() => {
-  observer.value = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        const steamId = visibleElements.value.get(entry.target);
-        if (!steamId) return;
-        
-        if (entry.isIntersecting && !loadedIcons.value.has(steamId)) {
-          if (!batchTimeout.value) {
-            batchTimeout.value = setTimeout(() => {
-              const visibleIds = Array.from(visibleElements.value.values())
-                .filter(id => !loadedIcons.value.has(id));
-              loadVisibleIcons(visibleIds);
-              batchTimeout.value = null;
-            }, 100);
-          }
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      const steamId = visibleElements.get(entry.target);
+      if (!steamId) return;
+      
+      if (entry.isIntersecting && !loadedIcons.value.has(steamId)) {
+        console.log("👁️ Element visible:", steamId);
+        if (!batchTimeout) {
+          batchTimeout = setTimeout(() => {
+            const visibleIds = Array.from(visibleElements.values())
+              .filter(id => !loadedIcons.value.has(id));
+            loadVisibleIcons(visibleIds);
+            batchTimeout = null;
+          }, 100);
         }
-      });
-    },
-    {
-      rootMargin: '200px',
-      threshold: 0.1
-    }
-  );
-  
-  // ВАЖНО: Регистрируем уже отрисованные элементы после onMounted
-  registerAllElements();
-});
+      }
+    });
+  },
+  {
+    rootMargin: '200px',
+    threshold: 0.1
+  }
+);
 
-onUnmounted(() => {
-  observer.value?.disconnect();
-  if (batchTimeout.value) clearTimeout(batchTimeout.value);
-});
-
-// Функция регистрации всех элементов из DOM
-const registerAllElements = () => {
-  if (!observer.value || !GAMES.value) return;
-  
-  const container = document.querySelector('[data-game-list]');
-  if (!container) return;
-  
-  const items = container.querySelectorAll('[data-steam-id]');
-  items.forEach(el => {
-    const steamId = Number(el.getAttribute('data-steam-id'));
-    if (steamId && !visibleElements.value.has(el)) {
-      observer.value!.observe(el);
-      visibleElements.value.set(el, steamId);
-    }
-  });
+// Ref-функция для v-for — вызывается, когда элемент появляется в DOM
+const setRef = (steamId: number) => (el: any) => {
+  const element = el?.$el || el; // Берём корневой DOM-элемент, если это компонент
+  if (element instanceof Element) {
+    console.log("📌 Registering element for steam_id:", steamId);
+    observer.observe(element);
+    visibleElements.set(element, steamId);
+  } else {
+    console.warn("⚠️ Could not get DOM element for steam_id:", steamId, el);
+  }
 };
 
-// Следим за изменением списка игр — регистрируем новые элементы
-watch(GAMES, () => {
-  nextTick(() => registerAllElements());
+onUnmounted(() => {
+  observer.disconnect();
+  if (batchTimeout) clearTimeout(batchTimeout);
 });
 
 const get_status = (status: Game["status"]) => {
@@ -145,11 +134,11 @@ const get_status = (status: Game["status"]) => {
     <template #heading><Icon name="nf-md-table" />Table</template>
     <div v-if="pending">Загрузка...</div>
     <div v-else-if="error">Ошибка: {{ error }}</div>
-    <Masonry v-else mode="vertical" :columns="4" :gap="32" data-game-list>
+    <Masonry v-else mode="vertical" :columns="4" :gap="32">
       <Flex 
         v-for="game in GAMES" 
         :key="game.id"
-        :data-steam-id="game.steam_id"
+        :ref="setRef(game.steam_id)"
         :gap="12" 
         :padding="16" 
         :css="{
