@@ -21,6 +21,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    steamgriddbApiKey: process.env.STEAMGRIDDB_KEY
+    steamgriddbApiKey: process.env.STEAMGRIDDB_KEY,
+    adminKey: process.env.ADMIN_KEY
   }
 })
