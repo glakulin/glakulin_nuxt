@@ -17,6 +17,10 @@ export default defineNuxtConfig({
       login: '/table',
       callback: '/table',
       exclude: ['/**'],
-    },
+    }
+  },
+
+  runtimeConfig: {
+    steamgriddbApiKey: process.env.STEAMGRIDDB_KEY
   }
 })
