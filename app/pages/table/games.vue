@@ -17,36 +17,40 @@ interface Game {
 
 const SUPABASE = useSupabaseClient();
 
+// Запрос
 const { data: GAMES, pending, error } = useAsyncData<Game[]>(
-  "game-list",
+  "game-list-with-icons",
   async () => {
+    // 1. Получаем игры из Supabase
     const { data, error } = await SUPABASE
       .from("games")
       .select("*")
       .order("status").order("started_at");
 
-    if (error) throw new Error(error.message);
-    const games = (data as Game[]) || [];
-    
-    if (games.length === 0) return [];
+    if (error) throw new Error(error.message)
+    if (!data) return []
 
-    // Загружаем иконки для всех игр
-    const steamIds = games.map(g => g.steam_id);
-    let iconsMap: Record<number, string | null> = {};
+    const games = data as Game[]
+    if (games.length === 0) return []
+
+    // 2. Получаем иконки пакетно через наш серверный API
+    const steamIds = games.map(g => g.steam_id)
+    let iconsMap: Record<number, string | null> = {}
     
     try {
       iconsMap = await $fetch('/api/steamgriddb/icons', {
         method: 'POST',
         body: { steam_ids: steamIds }
-      }) as Record<number, string | null>;
+      })
     } catch (e) {
-      console.error("Failed to load icons:", e);
+      console.error("Failed to fetch icons:", e)
     }
 
+    // 3. Обогащаем игры иконками
     return games.map(game => ({
       ...game,
-      icon_url: iconsMap[game.steam_id] ?? null
-    }));
+      icon_url: iconsMap[game.steam_id] || null
+    }))
   }
 );
 
