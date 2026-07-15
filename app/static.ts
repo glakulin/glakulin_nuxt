@@ -92,6 +92,13 @@ export const SKILLS: Card[] = [
     "description": "Deployment and hosting platform. Vercel offers continuous integration, edge functions and preview deployments for fast, reliable and globally distributed delivery.",
     "group": "Service",
     "url": "https://vercel.com/docs"
+  },
+  {
+    "name": "Supabase",
+    "icon": "nf-dev-supabase",
+    "description": "Open-source backend-as-a-service platform. Supabase provides a Postgres database, authentication, storage and edge functions with a real-time API for fast, scalable application development.",
+    "group": "Service",
+    "url": "https://supabase.com/docs"
   }
 ];
 
